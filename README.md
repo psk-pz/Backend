@@ -1,2 +1,2 @@
 # Backend
-REST API obsługujące logikę biznesową aplikacji
+REST API z logiką biznesową projektu
