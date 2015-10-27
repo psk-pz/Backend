@@ -12,4 +12,4 @@ Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
 ## Licencja
 
-Projekt na licencji MIT. [Zobacz pełen plik licencji](LICENSE.md).
+Projekt na licencji MIT. [Zobacz pełen plik licencji](LICENSE).
