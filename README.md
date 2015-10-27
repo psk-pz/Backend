@@ -1,8 +1,10 @@
 # Backend
 
-Część projektu z przedmiotu __projekt zespołowy__.
+Część projektu z przedmiotu *projekt zespołowy*.
+
 **RESTful web service** enkapsulujący logikę biznesową projektu zespołowego.
-Zaimplementowany za pomocą technologii __PHP__ oraz framework'a __Symfony2__.
+
+Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
 ## Autor
 
