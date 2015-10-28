@@ -6,10 +6,14 @@ Część projektu z przedmiotu *projekt zespołowy*.
 
 Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
-## Autor
+## Autorzy
 
 - [Politechnika Świętokrzyska - projekt zespołowy](https://github.com/psk-pz)
+ - Daniel Iwaniec
+ - Artur Kałuża
+ - Karol Gos
+ - Karol Gołuch
 
 ## Licencja
 
-Projekt na licencji MIT. [Zobacz pełen plik licencji](LICENSE).
+Projekt udostępniony na licencji **MIT**. [Zobacz pełen plik licencji](LICENSE).
