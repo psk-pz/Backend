@@ -1,4 +1,5 @@
 /.idea/
+/.vagrant/
 /app/bootstrap.php.cache
 /app/cache/*
 !app/cache/.gitkeep
