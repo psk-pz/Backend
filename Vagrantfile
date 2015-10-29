@@ -4,12 +4,11 @@ Vagrant.configure(2) do |config|
   config.vm.network "private_network", ip: "192.168.60.167"
   
   config.vm.provision "shell" do |shell|
-    shell.inline = "mkdir -p /etc/puppet/modules
-                    (puppet module list | grep puppetlabs-apt) || (puppet module install puppetlabs/apt)"
+    shell.path = "vagrant/vagrant.sh"
   end
   
   config.vm.provision "puppet" do |puppet|
-    puppet.manifests_path = "."
+    puppet.manifests_path = "vagrant"
     puppet.manifest_file  = "vagrant.pp"
   end
 
