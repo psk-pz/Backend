@@ -49,3 +49,19 @@ service { 'nginx':
     File['/etc/nginx/sites-available/default']
   ]
 }
+
+class { 'composer':
+  command_name => 'composer',
+  target_dir   => '/usr/local/bin',
+  require      => Package['php5-cli']
+}
+
+exec { 'composer':
+  command => 'mkdir /home/vagrant/.composer &&
+              COMPOSER_HOME="/home/vagrant/.composer" php /usr/local/bin/composer -n install',
+  path    => ['/usr/bin', '/usr/sbin', '/bin'],
+  cwd     => '/vagrant',
+  user    => 'vagrant',
+  timeout => 600,
+  require => Class['composer']
+}
