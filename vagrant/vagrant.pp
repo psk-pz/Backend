@@ -53,15 +53,25 @@ service { 'nginx':
 class { 'composer':
   command_name => 'composer',
   target_dir   => '/usr/local/bin',
+  auto_update  => true,
   require      => Package['php5-cli']
 }
 
+file { "/home/vagrant/.composer":
+  ensure => "directory",
+  owner  => 'vagrant',
+  group  => 'vagrant',
+  mode   => 600
+}
+
 exec { 'composer':
-  command => 'mkdir /home/vagrant/.composer &&
-              COMPOSER_HOME="/home/vagrant/.composer" php /usr/local/bin/composer -n install',
-  path    => ['/usr/bin', '/usr/sbin', '/bin'],
-  cwd     => '/vagrant',
-  user    => 'vagrant',
-  timeout => 600,
-  require => Class['composer']
+  command     => '/usr/bin/php /usr/local/bin/composer -n install',
+  environment => 'COMPOSER_HOME=/home/vagrant/.composer',
+  cwd         => '/vagrant',
+  user        => 'vagrant',
+  timeout     => 600,
+  require     => [
+    File['/home/vagrant/.composer'],
+    Class['composer']
+  ]
 }
