@@ -17,11 +17,21 @@ package { 'php5-fpm':
 service { 'php5-fpm':
   ensure    => running,
   enable    => true,
-  require   => Package['php5-fpm']
+  require   => Package['php5-fpm'],
+  subscribe => Package['php5-xdebug']
 }
 
 package { 'php5-apcu':
   ensure  => 'installed',
+  require => [
+    Class['apt'],
+    Package['php5-fpm']
+  ]
+}
+
+package { 'php5-xdebug':
+  ensure  => 'installed',
+  notify  => Service['php5-fpm'],
   require => [
     Class['apt'],
     Package['php5-fpm']
