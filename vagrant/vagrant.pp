@@ -38,6 +38,14 @@ package { 'php5-xdebug':
   ]
 }
 
+file_line { 'xdebug':
+  path    => '/etc/php5/fpm/conf.d/20-xdebug.ini',
+  line    => 'xdebug.remote_enable = on
+              xdebug.remote_connect_back = on
+              xdebug.idekey = "vagrant"',
+  require => Package['php5-xdebug']
+}
+
 package { 'php5-cli':
   ensure  => 'installed',
   require => [
@@ -92,4 +100,8 @@ exec { 'composer':
     File['/home/vagrant/.composer'],
     Class['composer']
   ]
+}
+
+exec { 'xdebug port':
+  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80'
 }
