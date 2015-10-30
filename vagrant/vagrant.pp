@@ -1,3 +1,7 @@
+exec { 'environment':
+  command => 'ENVIRONMENT_TYPE=dev && export ENVIRONMENT_TYPE',
+}
+
 class { 'apt':
   update => {
     frequency => 'always'
