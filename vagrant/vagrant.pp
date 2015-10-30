@@ -1,7 +1,3 @@
-exec { 'environment':
-  command => 'ENVIRONMENT_TYPE=dev && export ENVIRONMENT_TYPE',
-}
-
 class { 'apt':
   update => {
     frequency => 'always'
@@ -22,6 +18,14 @@ service { 'php5-fpm':
   ensure    => running,
   enable    => true,
   require   => Package['php5-fpm']
+}
+
+package { 'php5-apcu':
+  ensure  => 'installed',
+  require => [
+    Class['apt'],
+    Package['php5-fpm']
+  ]
 }
 
 package { 'php5-cli':
