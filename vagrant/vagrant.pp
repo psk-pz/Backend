@@ -103,5 +103,6 @@ exec { 'composer':
 }
 
 exec { 'xdebug port':
-  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80'
+  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
+  path    => ['/sbin', '/usr/share']
 }
