@@ -30,7 +30,7 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-      "rsync -a /vagrant/vendor/ /home/vagrant/backend/vendor"
+      "(printenv ENVIRONMENT_TYPE | grep dev) || (rsync -a --delete /vagrant/vendor /home/vagrant/backend)"
     ],
     "post-update-cmd": [
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
@@ -39,7 +39,7 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installRequirementsFile",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::prepareDeploymentTarget",
-      "rsync -a /vagrant/vendor/ /home/vagrant/backend/vendor"
+      "(printenv ENVIRONMENT_TYPE | grep dev) || (rsync -a --delete /vagrant/vendor /home/vagrant/backend)"
     ]
   },
   "config": {

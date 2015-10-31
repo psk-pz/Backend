@@ -46,6 +46,11 @@ file_line { 'xdebug':
   require => Package['php5-xdebug']
 }
 
+exec { 'xdebug port':
+  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
+  path    => ['/sbin', '/usr/share']
+}
+
 package { 'php5-cli':
   ensure  => 'installed',
   require => [
@@ -54,26 +59,23 @@ package { 'php5-cli':
   ]
 }
 
-package { 'nginx':
-  ensure  => 'installed',
-  require => Class['apt']
+file { '/etc/php5/fpm/php.ini':
+  ensure  => present,
+  require => Package['php5-fpm']
 }
 
-file { '/etc/nginx/sites-available/default':
-  source  => '/vagrant/vagrant/nginx.vhost',
-  owner   => 'root',
-  group   => 'root',
-  mode    => 644,
-  require => Package['nginx'],
-  notify  => Service['nginx']
+file_line { 'realpath_cache':
+  path    => '/etc/php5/fpm/php.ini',
+  line    => 'realpath_cache_size = 4096k',
+  match   => '^realpath_cache_size.*$',
+  require => File['/etc/php5/fpm/php.ini']
 }
 
-service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => [
-    File['/etc/nginx/sites-available/default']
-  ]
+file_line { 'realpath_ttl':
+  path    => '/etc/php5/fpm/php.ini',
+  line    => 'realpath_cache_ttl=7200',
+  match   => '^realpath_cache_ttl.*$',
+  require => File['/etc/php5/fpm/php.ini']
 }
 
 file { '/dev/shm/backend':
@@ -115,18 +117,45 @@ fooacl::conf { 'permissions':
   ]
 }
 
-class { 'composer':
-  command_name => 'composer',
-  target_dir   => '/usr/local/bin',
-  auto_update  => true,
-  require      => Package['php5-cli']
-}
-
 file { '/home/vagrant/.composer':
   ensure => 'directory',
   owner  => 'vagrant',
   group  => 'vagrant',
   mode   => 600
+}
+
+file { '/home/vagrant/backend':
+  ensure => 'directory',
+  owner  => 'vagrant',
+  group  => 'vagrant',
+  mode   => 700
+}
+
+file { '/home/vagrant/backend/vendor':
+  ensure  => 'directory',
+  owner   => 'vagrant',
+  group   => 'vagrant',
+  mode    => 700,
+  require => File['/home/vagrant/backend']
+}
+
+fooacl::conf { 'vendor':
+  target      => [
+    '/home/vagrant/backend',
+    '/home/vagrant/backend/vendor'
+  ],
+  permissions => 'user:www-data:rwX',
+  require     => [
+    File['/home/vagrant/backend'],
+    File['/home/vagrant/backend/vendor']
+  ]
+}
+
+class { 'composer':
+  command_name => 'composer',
+  target_dir   => '/usr/local/bin',
+  auto_update  => true,
+  require      => Package['php5-cli']
 }
 
 file { '/etc/environment':
@@ -149,32 +178,26 @@ exec { 'composer':
   ]
 }
 
-file { '/home/vagrant/backend':
-  ensure => 'directory',
-  owner  => 'vagrant',
-  group  => 'vagrant',
-  mode   => 700
+package { 'nginx':
+  ensure  => 'installed',
+  require => Class['apt']
 }
 
-file { '/home/vagrant/backend/vendor':
-  ensure  => 'directory',
-  owner   => 'vagrant',
-  group   => 'vagrant',
-  mode    => 700,
-  require => File['/home/vagrant/backend']
+file { '/etc/nginx/sites-available/default':
+  source  => '/vagrant/vagrant/nginx.vhost',
+  owner   => 'root',
+  group   => 'root',
+  mode    => 644,
+  require => Package['nginx'],
+  notify  => Service['nginx']
 }
 
-rsync::put { '/home/vagrant/backend/vendor':
-  source  => '/vagrant/vendor/',
-  require => [
-    Exec['composer'],
-    File['/home/vagrant/backend/vendor']
+service { 'nginx':
+  ensure    => running,
+  enable    => true,
+  subscribe => [
+    File['/etc/nginx/sites-available/default']
   ]
-}
-
-exec { 'xdebug port':
-  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
-  path    => ['/sbin', '/usr/share']
 }
 
 class { 'postgresql::server':
@@ -194,22 +217,4 @@ postgresql::server::database_grant { 'backend':
   privilege => 'ALL',
   db        => 'backend',
   role      => 'backend'
-}
-
-file { '/etc/php5/fpm/php.ini':
-  ensure => present
-}->
-file_line { 'realpath_cache':
-  path    => '/etc/php5/fpm/php.ini',
-  line    => 'realpath_cache_size = 4096k',
-  match   => '^realpath_cache_size.*$',
-}
-
-file { '/etc/php5/fpm/php.ini':
-  ensure => present
-}->
-file_line { 'realpath_cache':
-  path    => '/etc/php5/fpm/php.ini',
-  line    => 'realpath_cache_ttl=7200',
-  match   => '^realpath_cache_ttl.*$',
 }
