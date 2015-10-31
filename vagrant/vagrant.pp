@@ -76,6 +76,45 @@ service { 'nginx':
   ]
 }
 
+file { '/dev/shm/backend':
+  ensure => 'directory',
+  owner  => 'root',
+  group  => 'root',
+  mode   => 700
+}
+
+file { '/dev/shm/backend/logs':
+  ensure  => 'directory',
+  owner   => 'root',
+  group   => 'root',
+  mode    => 700,
+  require => File['/dev/shm/backend']
+}
+
+file { '/dev/shm/backend/cache':
+  ensure  => 'directory',
+  owner   => 'root',
+  group   => 'root',
+  mode    => 700,
+  require => File['/dev/shm/backend']
+}
+
+fooacl::conf { 'permissions':
+  target      => [
+    '/dev/shm/backend',
+    '/dev/shm/backend/logs',
+    '/dev/shm/backend/cache'
+  ],
+  permissions => [
+    'user:www-data:rwX',
+    'user:vagrant:rwX'
+  ],
+  require     => [
+    File['/dev/shm/backend/logs'],
+    File['/dev/shm/backend/cache']
+  ]
+}
+
 class { 'composer':
   command_name => 'composer',
   target_dir   => '/usr/local/bin',
@@ -83,13 +122,20 @@ class { 'composer':
   require      => Package['php5-cli']
 }
 
-file { "/home/vagrant/.composer":
-  ensure => "directory",
+file { '/home/vagrant/.composer':
+  ensure => 'directory',
   owner  => 'vagrant',
   group  => 'vagrant',
   mode   => 600
 }
 
+file { '/etc/environment':
+  ensure => present
+}->
+file_line { 'environment':
+  path => '/etc/environment',
+  line => 'ENVIRONMENT_TYPE=dev'
+}->
 exec { 'composer':
   command     => '/usr/bin/php /usr/local/bin/composer -n install',
   environment => 'COMPOSER_HOME=/home/vagrant/.composer',
@@ -98,7 +144,31 @@ exec { 'composer':
   timeout     => 600,
   require     => [
     File['/home/vagrant/.composer'],
-    Class['composer']
+    Class['composer'],
+    Class['::fooacl']
+  ]
+}
+
+file { '/home/vagrant/backend':
+  ensure => 'directory',
+  owner  => 'vagrant',
+  group  => 'vagrant',
+  mode   => 700
+}
+
+file { '/home/vagrant/backend/vendor':
+  ensure  => 'directory',
+  owner   => 'vagrant',
+  group   => 'vagrant',
+  mode    => 700,
+  require => File['/home/vagrant/backend']
+}
+
+rsync::put { '/home/vagrant/backend/vendor':
+  source  => '/vagrant/vendor/',
+  require => [
+    Exec['composer'],
+    File['/home/vagrant/backend/vendor']
   ]
 }
 
@@ -124,4 +194,22 @@ postgresql::server::database_grant { 'backend':
   privilege => 'ALL',
   db        => 'backend',
   role      => 'backend'
+}
+
+file { '/etc/php5/fpm/php.ini':
+  ensure => present
+}->
+file_line { 'realpath_cache':
+  path    => '/etc/php5/fpm/php.ini',
+  line    => 'realpath_cache_size = 4096k',
+  match   => '^realpath_cache_size.*$',
+}
+
+file { '/etc/php5/fpm/php.ini':
+  ensure => present
+}->
+file_line { 'realpath_cache':
+  path    => '/etc/php5/fpm/php.ini',
+  line    => 'realpath_cache_ttl=7200',
+  match   => '^realpath_cache_ttl.*$',
 }
