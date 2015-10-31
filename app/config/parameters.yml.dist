@@ -2,8 +2,8 @@ parameters:
     database_host:     127.0.0.1
     database_port:     5432
     database_name:     backend
-    database_user:     root
-    database_password: root
+    database_user:     backend
+    database_password: backend
 
     mailer_transport:  smtp
     mailer_host:       127.0.0.1

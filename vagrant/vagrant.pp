@@ -106,3 +106,22 @@ exec { 'xdebug port':
   command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
   path    => ['/sbin', '/usr/share']
 }
+
+class { 'postgresql::server':
+  postgres_password => 'postgres'
+}
+
+postgresql::server::role { 'backend':
+  password_hash => postgresql_password('backend', 'backend')
+}
+
+postgresql::server::db { 'backend':
+  user     => 'backend',
+  password => postgresql_password('backend', 'backend')
+}
+
+postgresql::server::database_grant { 'backend':
+  privilege => 'ALL',
+  db        => 'backend',
+  role      => 'backend'
+}
