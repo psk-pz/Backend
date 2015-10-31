@@ -144,7 +144,7 @@ fooacl::conf { 'vendor':
     '/home/vagrant/backend',
     '/home/vagrant/backend/vendor'
   ],
-  permissions => 'user:www-data:rwX',
+  permissions => ['user:www-data:rwX'],
   require     => [
     File['/home/vagrant/backend'],
     File['/home/vagrant/backend/vendor']
