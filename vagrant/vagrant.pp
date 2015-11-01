@@ -1,6 +1,6 @@
 $environmentVariableName = 'ENVIRONMENT_TYPE'
 $environmentVariableValue = 'dev'
-$xdebug = true
+$xdebug = false
 
 class { 'apt':
   update => {
@@ -142,6 +142,10 @@ exec { 'composer':
     Class['composer'],
     File_line['composer environment']
   ]
+}
+
+exec { '/bin/chmod -R 777 /dev/shm/backend':
+  require => Exec['composer']
 }
 
 package { 'nginx':
