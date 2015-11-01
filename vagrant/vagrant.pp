@@ -29,8 +29,7 @@ package { 'php5-cli':
 service { 'php5-fpm':
   ensure    => running,
   enable    => true,
-  require   => Package['php5-fpm'],
-  subscribe => Package['php5-xdebug']
+  require   => Package['php5-fpm']
 }
 
 package { 'php5-apcu':
