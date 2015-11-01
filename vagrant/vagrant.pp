@@ -1,3 +1,7 @@
+$environmentVariableName = 'ENVIRONMENT_TYPE'
+$environmentVariableValue = 'dev'
+$xdebug = true
+
 class { 'apt':
   update => {
     frequency => 'always'
@@ -14,6 +18,14 @@ package { 'php5-fpm':
   require => Class['apt']
 }
 
+package { 'php5-cli':
+  ensure  => 'installed',
+  require => [
+    Class['apt'],
+    Package['php5-fpm']
+  ]
+}
+
 service { 'php5-fpm':
   ensure    => running,
   enable    => true,
@@ -23,14 +35,6 @@ service { 'php5-fpm':
 
 package { 'php5-apcu':
   ensure  => 'installed',
-  require => [
-    Class['apt'],
-    Package['php5-fpm']
-  ]
-}
-
-package { 'php5-xdebug':
-  ensure  => 'installed',
   notify  => Service['php5-fpm'],
   require => [
     Class['apt'],
@@ -38,25 +42,26 @@ package { 'php5-xdebug':
   ]
 }
 
-file_line { 'xdebug':
-  path    => '/etc/php5/fpm/conf.d/20-xdebug.ini',
-  line    => 'xdebug.remote_enable = on
-              xdebug.remote_connect_back = on
-              xdebug.idekey = "vagrant"',
-  require => Package['php5-xdebug']
-}
+if $xdebug {
+  package { 'php5-xdebug':
+    ensure  => 'installed',
+    notify  => Service['php5-fpm'],
+    require => [
+      Class['apt'],
+      Package['php5-fpm']
+    ]
+  }
 
-exec { 'xdebug port':
-  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
-  path    => ['/sbin', '/usr/share']
-}
+  file { '/etc/php5/fpm/conf.d/20-xdebug.ini':
+    content    => template('/vagrant/vagrant/xdebug.erb'),
+    notify     => Service['php5-fpm'],
+    require    => Package['php5-xdebug']
+  }
 
-package { 'php5-cli':
-  ensure  => 'installed',
-  require => [
-    Class['apt'],
-    Package['php5-fpm']
-  ]
+  exec { 'xdebug port':
+    command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
+    path    => ['/sbin', '/usr/share']
+  }
 }
 
 file { '/etc/php5/fpm/php.ini':
@@ -66,8 +71,9 @@ file { '/etc/php5/fpm/php.ini':
 
 file_line { 'realpath_cache':
   path    => '/etc/php5/fpm/php.ini',
-  line    => 'realpath_cache_size = 4096k',
+  line    => 'realpath_cache_size=4096k',
   match   => '^realpath_cache_size.*$',
+  notify  => Service['php5-fpm'],
   require => File['/etc/php5/fpm/php.ini']
 }
 
@@ -75,80 +81,37 @@ file_line { 'realpath_ttl':
   path    => '/etc/php5/fpm/php.ini',
   line    => 'realpath_cache_ttl=7200',
   match   => '^realpath_cache_ttl.*$',
+  notify  => Service['php5-fpm'],
   require => File['/etc/php5/fpm/php.ini']
 }
 
 file { '/dev/shm/backend':
   ensure => 'directory',
-  owner  => 'root',
-  group  => 'root',
-  mode   => 700
+  mode   => 777
 }
-
 file { '/dev/shm/backend/logs':
   ensure  => 'directory',
-  owner   => 'root',
-  group   => 'root',
-  mode    => 700,
+  mode    => 777,
   require => File['/dev/shm/backend']
 }
-
 file { '/dev/shm/backend/cache':
   ensure  => 'directory',
-  owner   => 'root',
-  group   => 'root',
-  mode    => 700,
+  mode    => 777,
   require => File['/dev/shm/backend']
-}
-
-fooacl::conf { 'permissions':
-  target      => [
-    '/dev/shm/backend',
-    '/dev/shm/backend/logs',
-    '/dev/shm/backend/cache'
-  ],
-  permissions => [
-    'user:www-data:rwX',
-    'user:vagrant:rwX'
-  ],
-  require     => [
-    File['/dev/shm/backend/logs'],
-    File['/dev/shm/backend/cache']
-  ]
 }
 
 file { '/home/vagrant/.composer':
   ensure => 'directory',
-  owner  => 'vagrant',
-  group  => 'vagrant',
-  mode   => 600
+  mode   => 777
 }
-
 file { '/home/vagrant/backend':
   ensure => 'directory',
-  owner  => 'vagrant',
-  group  => 'vagrant',
-  mode   => 700
+  mode   => 777
 }
-
 file { '/home/vagrant/backend/vendor':
   ensure  => 'directory',
-  owner   => 'vagrant',
-  group   => 'vagrant',
-  mode    => 700,
+  mode    => 777,
   require => File['/home/vagrant/backend']
-}
-
-fooacl::conf { 'vendor':
-  target      => [
-    '/home/vagrant/backend',
-    '/home/vagrant/backend/vendor'
-  ],
-  permissions => ['user:www-data:rwX'],
-  require     => [
-    File['/home/vagrant/backend'],
-    File['/home/vagrant/backend/vendor']
-  ]
 }
 
 class { 'composer':
@@ -160,11 +123,14 @@ class { 'composer':
 
 file { '/etc/environment':
   ensure => present
-}->
-file_line { 'environment':
-  path => '/etc/environment',
-  line => 'ENVIRONMENT_TYPE=dev'
-}->
+}
+
+file_line { 'composer environment':
+  path    => '/etc/environment',
+  line    => "${environmentVariableName}=${environmentVariableValue}",
+  require => File['/etc/environment']
+}
+
 exec { 'composer':
   command     => '/usr/bin/php /usr/local/bin/composer -n install',
   environment => 'COMPOSER_HOME=/home/vagrant/.composer',
@@ -174,7 +140,7 @@ exec { 'composer':
   require     => [
     File['/home/vagrant/.composer'],
     Class['composer'],
-    Class['::fooacl']
+    File_line['composer environment']
   ]
 }
 
@@ -184,12 +150,12 @@ package { 'nginx':
 }
 
 file { '/etc/nginx/sites-available/default':
-  source  => '/vagrant/vagrant/nginx.vhost',
-  owner   => 'root',
-  group   => 'root',
-  mode    => 644,
-  require => Package['nginx'],
-  notify  => Service['nginx']
+  content  => template('/vagrant/vagrant/nginx.erb'),
+  owner    => 'root',
+  group    => 'root',
+  mode     => 644,
+  require  => Package['nginx'],
+  notify   => Service['nginx']
 }
 
 service { 'nginx':

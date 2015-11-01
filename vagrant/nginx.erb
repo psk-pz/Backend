@@ -13,7 +13,9 @@ server {
 
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
-        fastcgi_param ENVIRONMENT_TYPE dev;
+        <% if @environmentVariableName && @environmentVariableValue -%>
+        fastcgi_param <%= @environmentVariableName %> <%= @environmentVariableValue %>;
+        <% end -%>
 
         internal;
     }
