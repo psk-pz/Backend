@@ -3,10 +3,13 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Composer\Autoload\ClassLoader;
 
-$environmentType = getenv('ENVIRONMENT_TYPE');
+$developmentEnvironment = false;
+if (file_exists('/vagrant/vagrant/php/isDevelopmentEnvironment.php')) {
+    $developmentEnvironment = include '/vagrant/vagrant/php/isDevelopmentEnvironment.php';
+}
 
 /** @var ClassLoader $loader */
-if ($environmentType == 'dev') {
+if ($developmentEnvironment) {
     $loader = require '/home/vagrant/backend/vendor/autoload.php';
     $loader->addPsr4('', '/vagrant/src');
 } else {

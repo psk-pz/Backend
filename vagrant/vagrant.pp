@@ -52,7 +52,7 @@ if $xdebug {
   }
 
   file { '/etc/php5/fpm/conf.d/20-xdebug.ini':
-    content    => template('/vagrant/vagrant/xdebug.erb'),
+    content    => template('/vagrant/vagrant/erb/xdebug.erb'),
     notify     => Service['php5-fpm'],
     require    => Package['php5-xdebug']
   }
@@ -120,6 +120,11 @@ class { 'composer':
   require      => Package['php5-cli']
 }
 
+file { '/vagrant/vagrant/php/isDevelopmentEnvironment.php':
+  ensure   => present,
+  content  => template('/vagrant/vagrant/erb/isDevelopmentEnvironment.erb')
+}
+
 file { '/etc/environment':
   ensure => present
 }
@@ -138,6 +143,7 @@ exec { 'composer':
   timeout     => 600,
   require     => [
     File['/home/vagrant/.composer'],
+    File['/vagrant/vagrant/php/isDevelopmentEnvironment.php'],
     Class['composer'],
     File_line['composer environment']
   ]
@@ -153,7 +159,8 @@ package { 'nginx':
 }
 
 file { '/etc/nginx/sites-available/default':
-  content  => template('/vagrant/vagrant/nginx.erb'),
+  ensure   => present,
+  content  => template('/vagrant/vagrant/erb/nginx.erb'),
   owner    => 'root',
   group    => 'root',
   mode     => 644,

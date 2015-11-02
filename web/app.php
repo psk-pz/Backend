@@ -4,12 +4,15 @@ use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 
-$environmentType = getenv('ENVIRONMENT_TYPE');
+$developmentEnvironment = false;
+if (file_exists('/vagrant/vagrant/php/isDevelopmentEnvironment.php')) {
+    $developmentEnvironment = include '/vagrant/vagrant/php/isDevelopmentEnvironment.php';
+}
 
 $loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
 require_once __DIR__ . '/../app/AppKernel.php';
 
-if ($environmentType == 'dev') {
+if ($developmentEnvironment) {
     Debug::enable();
 
     $kernel = new AppKernel('dev', true);

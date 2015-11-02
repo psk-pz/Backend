@@ -13,3 +13,4 @@
 /vendor/
 /web/bundles/
 /coverage/
+vagrant/php/isDevelopmentEnvironment.php
