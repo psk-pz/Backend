@@ -137,7 +137,10 @@ file_line { 'composer environment':
 
 exec { 'composer':
   command     => '/usr/bin/php /usr/local/bin/composer -n install',
-  environment => 'COMPOSER_HOME=/home/vagrant/.composer',
+  environment => [
+    'COMPOSER_HOME=/home/vagrant/.composer',
+    "${environmentVariableName}=${environmentVariableValue}"
+  ],
   cwd         => '/vagrant',
   user        => 'vagrant',
   timeout     => 1000,
