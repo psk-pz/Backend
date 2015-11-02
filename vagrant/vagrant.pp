@@ -156,6 +156,11 @@ exec { '/bin/chmod -R 777 /dev/shm/backend':
   require => Exec['composer']
 }
 
+class { 'php_phars':
+  phars      => ['phpunit', 'behat'],
+  redownload => true
+}
+
 package { 'nginx':
   ensure  => 'installed',
   require => Class['apt']
