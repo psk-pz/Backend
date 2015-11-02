@@ -140,7 +140,7 @@ exec { 'composer':
   environment => 'COMPOSER_HOME=/home/vagrant/.composer',
   cwd         => '/vagrant',
   user        => 'vagrant',
-  timeout     => 600,
+  timeout     => 1000,
   require     => [
     File['/home/vagrant/.composer'],
     File['/vagrant/vagrant/php/isDevelopmentEnvironment.php'],
