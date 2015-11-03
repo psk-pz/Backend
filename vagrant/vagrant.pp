@@ -172,11 +172,6 @@ exec { 'composer':
   ]
 }
 
-class { 'php_phars':
-  phars      => ['phpunit', 'behat'],
-  redownload => true
-}
-
 package { 'nginx':
   ensure  => 'installed',
   require => Class['apt']
