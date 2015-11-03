@@ -136,6 +136,7 @@ file_line { 'system environment':
   path    => '/etc/environment',
   line    => "${environmentVariableName}=${environmentVariableValue}"
 }
+
 file_line { 'composer environment':
   path    => '/etc/environment',
   line    => "COMPOSER_HOME=${composerHome}"
@@ -167,10 +168,7 @@ exec { 'composer':
   require     => [
     Class['composer'],
     File['vagrant environment for php'],
-    Exec['symfony directories permissions'],
-    File_line['system environment'],
-    File_line['composer environment'],
-    File['sudoers configuration']
+    Exec['symfony directories permissions']
   ]
 }
 
