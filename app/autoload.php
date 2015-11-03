@@ -10,7 +10,7 @@ if (file_exists('/vagrant/vagrant/php/vagrantEnvironment.php')) {
 
 /** @var ClassLoader $loader */
 if ($vagrantEnvironment && $vagrantEnvironment['isDevelopmentEnvironment']) {
-    $loader = require $vagrantEnvironment['symfonyVendorDirectory'] . 'autoload.php';
+    $loader = require $vagrantEnvironment['symfonyVendorDirectory'] . '/autoload.php';
     $loader->addPsr4('', '/vagrant/src/');
 } else {
     $loader = require __DIR__ . '/../vendor/autoload.php';

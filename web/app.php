@@ -17,7 +17,7 @@ if ($vagrantEnvironment && $vagrantEnvironment['isDevelopmentEnvironment']) {
 
     $kernel = new AppKernel('dev', true);
     $kernel->setCacheDir($vagrantEnvironment['symfonyCacheDirectory']);
-    $kernel->setLogDir($vagrantEnvironment['symfonyLogDirectory']);
+    $kernel->setLogDir($vagrantEnvironment['symfonyLogsDirectory']);
     $kernel->loadClassCache();
 } else {
     $apcLoader = new ApcClassLoader('backend', $loader);
