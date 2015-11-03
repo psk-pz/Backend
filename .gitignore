@@ -13,4 +13,5 @@
 /vendor/
 /web/bundles/
 /coverage/
-vagrant/php/isDevelopmentEnvironment.php
+vagrant/php/vagrantEnvironment.php
+vagrant/sh/directoryPermissions.sh

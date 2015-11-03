@@ -144,8 +144,7 @@ class { 'composer':
 }
 
 exec { 'composer':
-  command     => 'php composer -n install',
-  path        => ['/usr/bin/', '/usr/local/bin/'],
+  command     => '/usr/bin/php /usr/local/bin/composer -n install',
   environment => [
     "COMPOSER_HOME=${composerHome}",
     "${environmentVariableName}=${environmentVariableValue}"
