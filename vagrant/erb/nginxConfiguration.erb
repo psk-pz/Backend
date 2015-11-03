@@ -1,5 +1,5 @@
 server {
-    server_name backend.psk-pz.dev www.backend.psk-pz.dev;
+    server_name <%= @nginxServername %> www.<%= @nginxServername %>;
     root /vagrant/web;
 
     location / {
@@ -7,19 +7,17 @@ server {
     }
 
     location ~ ^/app\.php(/|$) {
-        fastcgi_pass unix:/var/run/php5-fpm.sock;
+        fastcgi_pass <%= @nginxUpstream %>;
         fastcgi_split_path_info ^(.+\.php)(/.*)$;
         include fastcgi_params;
 
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
-        <% if @environmentVariableName && @environmentVariableValue -%>
         fastcgi_param <%= @environmentVariableName %> <%= @environmentVariableValue %>;
-        <% end -%>
 
         internal;
     }
 
-    error_log /var/log/nginx/project_error.log;
-    access_log /var/log/nginx/project_access.log;
+    error_log <%= @nginxErrorLogPath %>;
+    access_log <%= @nginxAccessLogPath %>;
 }

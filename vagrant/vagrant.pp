@@ -2,9 +2,9 @@ $environmentVariableName = 'ENVIRONMENT_TYPE'
 $environmentVariableValue = 'dev'
 
 $symfonyDirectory = '/symfony'
-$cacheDirectory = '/symfony/cache'
-$logsDirectory = '/symfony/logs'
-$vendorDirectory = '/symfony/vendor'
+$cacheDirectory = "${symfonyDirectory}/cache"
+$logsDirectory = "${symfonyDirectory}/logs"
+$vendorDirectory = "${symfonyDirectory}/vendor"
 $composerHome = '/home/vagrant/.composer'
 $requiredDirectories = [
   $symfonyDirectory,
@@ -15,9 +15,15 @@ $requiredDirectories = [
 ]
 
 $nginxConfigurationPath = '/etc/nginx/sites-available/default'
+$nginxServername = 'backend.psk-pz.dev'
+$nginxUpstream = 'unix:/var/run/php5-fpm.sock'
+$nginxErrorLogPath = '/var/log/nginx/backend_error.log'
+$nginxAccessLogPath = '/var/log/nginx/backend_access.log'
+
 $phpConfigurationPath = '/etc/php5/fpm/php.ini'
 $xdebugConfigurationPath = '/etc/php5/fpm/conf.d/20-xdebug.ini'
-$enableXdebug = false
+$xdebugKey = 'vagrant'
+$xdebugEnable = false
 
 class { 'apt':
   update => {
