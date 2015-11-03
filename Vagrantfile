@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
   end
 
   config.vm.provision "shell" do |shell|
-    shell.path = "vagrant/vagrant.sh"
+    shell.path = "vagrant/sh/vagrant.sh"
   end
   
   config.vm.provision "puppet" do |puppet|

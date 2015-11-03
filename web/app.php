@@ -4,18 +4,20 @@ use Symfony\Component\ClassLoader\ApcClassLoader;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Debug\Debug;
 
-$developmentEnvironment = false;
-if (file_exists('/vagrant/vagrant/php/isDevelopmentEnvironment.php')) {
-    $developmentEnvironment = include '/vagrant/vagrant/php/isDevelopmentEnvironment.php';
+$vagrantEnvironment = false;
+if (file_exists('/vagrant/vagrant/php/vagrantEnvironment.php')) {
+    $vagrantEnvironment = include '/vagrant/vagrant/php/vagrantEnvironment.php';
 }
 
 $loader = require_once __DIR__ . '/../app/bootstrap.php.cache';
 require_once __DIR__ . '/../app/AppKernel.php';
 
-if ($developmentEnvironment) {
+if ($vagrantEnvironment && $vagrantEnvironment['isDevelopmentEnvironment']) {
     Debug::enable();
 
     $kernel = new AppKernel('dev', true);
+    $kernel->setCacheDir($vagrantEnvironment['symfonyCacheDirectory']);
+    $kernel->setLogDir($vagrantEnvironment['symfonyLogDirectory']);
     $kernel->loadClassCache();
 } else {
     $apcLoader = new ApcClassLoader('backend', $loader);

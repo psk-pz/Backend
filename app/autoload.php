@@ -3,15 +3,15 @@
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Composer\Autoload\ClassLoader;
 
-$developmentEnvironment = false;
-if (file_exists('/vagrant/vagrant/php/isDevelopmentEnvironment.php')) {
-    $developmentEnvironment = include '/vagrant/vagrant/php/isDevelopmentEnvironment.php';
+$vagrantEnvironment = false;
+if (file_exists('/vagrant/vagrant/php/vagrantEnvironment.php')) {
+    $vagrantEnvironment = include '/vagrant/vagrant/php/vagrantEnvironment.php';
 }
 
 /** @var ClassLoader $loader */
-if ($developmentEnvironment) {
-    $loader = require '/home/vagrant/backend/vendor/autoload.php';
-    $loader->addPsr4('', '/vagrant/src');
+if ($vagrantEnvironment && $vagrantEnvironment['isDevelopmentEnvironment']) {
+    $loader = require $vagrantEnvironment['symfonyVendorDirectory'] . 'autoload.php';
+    $loader->addPsr4('', '/vagrant/src/');
 } else {
     $loader = require __DIR__ . '/../vendor/autoload.php';
 }

@@ -1,7 +1,0 @@
-<?php
-
-<% if @environmentVariableName && @environmentVariableValue -%>
-return getenv('<%= @environmentVariableName %>') == '<%= @environmentVariableValue %>';
-<% else -%>
-return false;
-<% end -%>

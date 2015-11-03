@@ -5,6 +5,9 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 
 class AppKernel extends Kernel
 {
+    private $cacheDir;
+    private $logDir;
+
     public function registerBundles()
     {
         $bundles = [
@@ -34,10 +37,20 @@ class AppKernel extends Kernel
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 
+    public function setCacheDir($cacheDir)
+    {
+        $this->cacheDir = $cacheDir;
+    }
+
+    public function setLogDir($logDir)
+    {
+        $this->logDir = $logDir;
+    }
+
     public function getCacheDir()
     {
-        if (in_array($this->environment, ['dev', 'test'])) {
-            return '/dev/shm/backend/cache/' . $this->environment;
+        if (in_array($this->environment, ['dev', 'test']) && $this->cacheDir) {
+            return $this->cacheDir;
         }
 
         return parent::getCacheDir();
@@ -45,8 +58,8 @@ class AppKernel extends Kernel
 
     public function getLogDir()
     {
-        if (in_array($this->environment, ['dev', 'test'])) {
-            return '/dev/shm/backend/logs';
+        if (in_array($this->environment, ['dev', 'test']) && $this->logDir) {
+            return $this->logDir;
         }
 
         return parent::getLogDir();

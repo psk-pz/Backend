@@ -1,0 +1,9 @@
+#!/bin/bash
+
+setfacl -R -m u:www-data:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
+setfacl -dR -m u:www-data:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
+
+setfacl -R -m u:www-data:rwX -m u:vagrant:rwX <%= @composerHome %>
+setfacl -dR -m u:www-data:rwX -m u:vagrant:rwX <%= @composerHome %>
+<% else -%>
+exit 0

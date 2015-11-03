@@ -1,6 +1,23 @@
 $environmentVariableName = 'ENVIRONMENT_TYPE'
 $environmentVariableValue = 'dev'
-$xdebug = false
+
+$symfonyDirectory = '/symfony'
+$cacheDirectory = '/symfony/cache'
+$logsDirectory = '/symfony/logs'
+$vendorDirectory = '/symfony/vendor'
+$composerHome = '/home/vagrant/.composer'
+$requiredDirectories = [
+  $symfonyDirectory,
+  $cacheDirectory,
+  $logsDirectory,
+  $vendorDirectory,
+  $composerHome
+]
+
+$nginxConfigurationPath = '/etc/nginx/sites-available/default'
+$phpConfigurationPath = '/etc/php5/fpm/php.ini'
+$xdebugConfigurationPath = '/etc/php5/fpm/conf.d/20-xdebug.ini'
+$enableXdebug = false
 
 class { 'apt':
   update => {
@@ -13,9 +30,20 @@ package { 'git':
   require => Class['apt']
 }
 
+package { 'acl':
+  ensure  => 'installed',
+  require => Class['apt']
+}
+
 package { 'php5-fpm':
   ensure  => 'installed',
   require => Class['apt']
+}
+
+service { 'php5-fpm':
+  ensure  => running,
+  enable  => true,
+  require => Package['php5-fpm']
 }
 
 package { 'php5-cli':
@@ -24,12 +52,6 @@ package { 'php5-cli':
     Class['apt'],
     Package['php5-fpm']
   ]
-}
-
-service { 'php5-fpm':
-  ensure    => running,
-  enable    => true,
-  require   => Package['php5-fpm']
 }
 
 package { 'php5-apcu':
@@ -41,7 +63,7 @@ package { 'php5-apcu':
   ]
 }
 
-if $xdebug {
+if $enableXdebug {
   package { 'php5-xdebug':
     ensure  => 'installed',
     notify  => Service['php5-fpm'],
@@ -51,66 +73,61 @@ if $xdebug {
     ]
   }
 
-  file { '/etc/php5/fpm/conf.d/20-xdebug.ini':
-    content    => template('/vagrant/vagrant/erb/xdebug.erb'),
-    notify     => Service['php5-fpm'],
-    require    => Package['php5-xdebug']
+  file { 'xdebug configuration':
+    ensure  => present,
+    path    => $xdebugConfigurationPath,
+    content => template('/vagrant/vagrant/erb/xdebugConfiguration.erb'),
+    notify  => Service['php5-fpm'],
+    require => Package['php5-xdebug']
   }
 
-  exec { 'xdebug port':
+  exec { 'open xdebug port':
     command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
     path    => ['/sbin', '/usr/share']
   }
 }
 
-file { '/etc/php5/fpm/php.ini':
-  ensure  => present,
+file_line { 'php.ini realpath_cache':
+  path    => $phpConfigurationPath,
+  line    => 'realpath_cache_size=4096k',
+  match   => '^;realpath_cache_size.*$',
+  notify  => Service['php5-fpm'],
   require => Package['php5-fpm']
 }
 
-file_line { 'realpath_cache':
-  path    => '/etc/php5/fpm/php.ini',
-  line    => 'realpath_cache_size=4096k',
-  match   => '^realpath_cache_size.*$',
-  notify  => Service['php5-fpm'],
-  require => File['/etc/php5/fpm/php.ini']
-}
-
-file_line { 'realpath_ttl':
-  path    => '/etc/php5/fpm/php.ini',
+file_line { 'php.ini realpath_ttl':
+  path    => $phpConfigurationPath,
   line    => 'realpath_cache_ttl=7200',
-  match   => '^realpath_cache_ttl.*$',
+  match   => '^;realpath_cache_ttl.*$',
   notify  => Service['php5-fpm'],
-  require => File['/etc/php5/fpm/php.ini']
+  require => Package['php5-fpm']
 }
 
-file { '/dev/shm/backend':
+file { $requiredDirectories:
   ensure => 'directory',
-  mode   => 777
-}
-file { '/dev/shm/backend/logs':
-  ensure  => 'directory',
-  mode    => 777,
-  require => File['/dev/shm/backend']
-}
-file { '/dev/shm/backend/cache':
-  ensure  => 'directory',
-  mode    => 777,
-  require => File['/dev/shm/backend']
+  owner  => 'root',
+  group  => 'root',
+  mode   => 700,
+}->
+file { 'symfony directories permissions':
+  ensure  => present,
+  path    => '/vagrant/vagrant/sh/directoryPermissions.sh',
+  content => template('/vagrant/vagrant/erb/directoryPermissions.erb')
+}->
+exec { 'symfony directories permissions':
+  command => '/bin/sh /vagrant/vagrant/sh/directoryPermissions.sh',
+  require => Package['acl']
 }
 
-file { '/home/vagrant/.composer':
-  ensure => 'directory',
-  mode   => 777
+file { 'vagrant environment for php':
+  ensure  => present,
+  path    => '/vagrant/vagrant/php/vagrantEnvironment.php',
+  content => template('/vagrant/vagrant/erb/vagrantEnvironment.erb')
 }
-file { '/home/vagrant/backend':
-  ensure => 'directory',
-  mode   => 777
-}
-file { '/home/vagrant/backend/vendor':
-  ensure  => 'directory',
-  mode    => 777,
-  require => File['/home/vagrant/backend']
+
+file_line { 'system environment for php':
+  path    => '/etc/environment',
+  line    => "${environmentVariableName}=${environmentVariableValue}"
 }
 
 class { 'composer':
@@ -120,40 +137,22 @@ class { 'composer':
   require      => Package['php5-cli']
 }
 
-file { '/vagrant/vagrant/php/isDevelopmentEnvironment.php':
-  ensure   => present,
-  content  => template('/vagrant/vagrant/erb/isDevelopmentEnvironment.erb')
-}
-
-file { '/etc/environment':
-  ensure => present
-}
-
-file_line { 'composer environment':
-  path    => '/etc/environment',
-  line    => "${environmentVariableName}=${environmentVariableValue}",
-  require => File['/etc/environment']
-}
-
 exec { 'composer':
-  command     => '/usr/bin/php /usr/local/bin/composer -n install',
+  command     => 'php composer -n install',
+  path        => ['/usr/bin/', '/usr/local/bin/'],
   environment => [
-    'COMPOSER_HOME=/home/vagrant/.composer',
+    "COMPOSER_HOME=${composerHome}",
     "${environmentVariableName}=${environmentVariableValue}"
   ],
   cwd         => '/vagrant',
   user        => 'vagrant',
   timeout     => 1000,
   require     => [
-    File['/home/vagrant/.composer'],
-    File['/vagrant/vagrant/php/isDevelopmentEnvironment.php'],
     Class['composer'],
-    File_line['composer environment']
+    Exec['symfony directories permissions'],
+    File['vagrant environment for php'],
+    File_line['system environment for php']
   ]
-}
-
-exec { '/bin/chmod -R 777 /dev/shm/backend':
-  require => Exec['composer']
 }
 
 class { 'php_phars':
@@ -166,22 +165,21 @@ package { 'nginx':
   require => Class['apt']
 }
 
-file { '/etc/nginx/sites-available/default':
-  ensure   => present,
-  content  => template('/vagrant/vagrant/erb/nginx.erb'),
-  owner    => 'root',
-  group    => 'root',
-  mode     => 644,
-  require  => Package['nginx'],
-  notify   => Service['nginx']
+service { 'nginx':
+  ensure  => running,
+  enable  => true,
+  require => Package['nginx']
 }
 
-service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  subscribe => [
-    File['/etc/nginx/sites-available/default']
-  ]
+file { 'nginx configuration':
+  ensure  => present,
+  path    => $nginxConfigurationPath,
+  content => template('/vagrant/vagrant/erb/nginxConfiguration.erb'),
+  owner   => 'root',
+  group   => 'root',
+  mode    => 644,
+  require => Package['nginx'],
+  notify  => Service['nginx']
 }
 
 class { 'postgresql::server':
