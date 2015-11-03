@@ -162,7 +162,7 @@ exec { 'composer':
   user        => 'vagrant',
   timeout     => 1000,
   environment => [
-    "COMPOSER HOME=${composerHome}",
+    "COMPOSER_HOME=${composerHome}",
     "${environmentVariableName}=${environmentVariableValue}"
   ],
   require     => [
