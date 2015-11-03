@@ -14,6 +14,7 @@ $requiredDirectories = [
   $composerHome
 ]
 
+$nginxUser = 'www-data'
 $nginxConfigurationPath = '/etc/nginx/sites-available/default'
 $nginxServername = 'backend.psk-pz.dev'
 $nginxUpstream = 'unix:/var/run/php5-fpm.sock'
@@ -109,6 +110,12 @@ file_line { 'php.ini realpath_ttl':
   require => Package['php5-fpm']
 }
 
+file { 'vagrant environment for php':
+  ensure  => present,
+  path    => '/vagrant/vagrant/php/vagrantEnvironment.php',
+  content => template('/vagrant/vagrant/erb/vagrantEnvironment.erb')
+}
+
 file { $requiredDirectories:
   ensure => 'directory',
   owner  => 'root',
@@ -125,15 +132,20 @@ exec { 'symfony directories permissions':
   require => Package['acl']
 }
 
-file { 'vagrant environment for php':
-  ensure  => present,
-  path    => '/vagrant/vagrant/php/vagrantEnvironment.php',
-  content => template('/vagrant/vagrant/erb/vagrantEnvironment.erb')
-}
-
-file_line { 'system environment for php':
+file_line { 'system environment':
   path    => '/etc/environment',
   line    => "${environmentVariableName}=${environmentVariableValue}"
+}
+file_line { 'composer environment':
+  path    => '/etc/environment',
+  line    => "COMPOSER_HOME=${composerHome}"
+}
+
+file { 'sudoers configuration':
+  ensure  => present,
+  path    => '/etc/sudoers.d/custom',
+  content => template('/vagrant/vagrant/erb/sudoersConfiguration.erb'),
+  require => File_line['system environment']
 }
 
 class { 'composer':
@@ -145,18 +157,16 @@ class { 'composer':
 
 exec { 'composer':
   command     => '/usr/bin/php /usr/local/bin/composer -n install',
-  environment => [
-    "COMPOSER_HOME=${composerHome}",
-    "${environmentVariableName}=${environmentVariableValue}"
-  ],
   cwd         => '/vagrant',
   user        => 'vagrant',
   timeout     => 1000,
   require     => [
     Class['composer'],
-    Exec['symfony directories permissions'],
     File['vagrant environment for php'],
-    File_line['system environment for php']
+    Exec['symfony directories permissions'],
+    File_line['system environment'],
+    File_line['composer environment'],
+    File['sudoers configuration']
   ]
 }
 

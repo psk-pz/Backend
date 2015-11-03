@@ -1,7 +1,7 @@
 #!/bin/bash
 
-setfacl -R -m u:www-data:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
-setfacl -dR -m u:www-data:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
+setfacl -R -m u:<%= @nginxUser %>:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
+setfacl -dR -m u:<%= @nginxUser %>:rwX -m u:vagrant:rwX <%= @symfonyDirectory %>
 
-setfacl -R -m u:www-data:rwX -m u:vagrant:rwX <%= @composerHome %>
-setfacl -dR -m u:www-data:rwX -m u:vagrant:rwX <%= @composerHome %>
+setfacl -R -m u:<%= @nginxUser %>:rwX -m u:vagrant:rwX <%= @composerHome %>
+setfacl -dR -m u:<%= @nginxUser %>:rwX -m u:vagrant:rwX <%= @composerHome %>
