@@ -160,6 +160,10 @@ exec { 'composer':
   cwd         => '/vagrant',
   user        => 'vagrant',
   timeout     => 1000,
+  environment => [
+    "COMPOSER HOME=${composerHome}",
+    "${environmentVariableName}=${environmentVariableValue}"
+  ],
   require     => [
     Class['composer'],
     File['vagrant environment for php'],
