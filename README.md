@@ -1,6 +1,7 @@
 # Backend
 
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat)](LICENSE.md)
+[![Build Status](https://travis-ci.org/psk-pz/Backend.svg?branch=master)](https://travis-ci.org/psk-pz/Backend)
 
 Część projektu z przedmiotu *projekt zespołowy*.
 
