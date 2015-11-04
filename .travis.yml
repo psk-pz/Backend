@@ -8,3 +8,9 @@ php:
 before_script:
   - composer self-update
   - composer install
+
+script: phpunit -c app/ --coverage-clover=app/logs/coverage.clover
+
+after_success:
+  - wget https://scrutinizer-ci.com/ocular.phar
+  - php ocular.phar code-coverage:upload --format=php-clover app/logs/coverage.clover
