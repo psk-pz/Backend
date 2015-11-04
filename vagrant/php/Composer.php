@@ -14,7 +14,7 @@ class Composer
         if ($vagrantEnvironment && $vagrantEnvironment['isDevelopmentEnvironment']) {
             $insideVagrant = '/vagrant/vendor/';
             $outsideVagrant = $vagrantEnvironment['symfonyVendorDirectory'];
-            exec("rsync -a --delete -O --no-g {$insideVagrant} {$outsideVagrant}");
+            exec("sudo rsync -a --delete -O --no-g {$insideVagrant} {$outsideVagrant}");
         }
     }
 }
