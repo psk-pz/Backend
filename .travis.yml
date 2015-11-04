@@ -6,7 +6,7 @@ php:
   - 7.0
   - nightly
 
-before_script: composer install
+before_script: composer install --prefer-dist
 
 script: phpunit --coverage-clover=app/logs/coverage.clover
 
