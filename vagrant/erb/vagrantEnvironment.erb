@@ -1,0 +1,8 @@
+<?php
+
+return [
+    'isDevelopmentEnvironment' => getenv('<%= @environmentVariableName %>') == '<%= @environmentVariableValue %>',
+    'symfonyCacheDirectory' => '<%= @cacheDirectory %>',
+    'symfonyLogsDirectory' => '<%= @logsDirectory %>',
+    'symfonyVendorDirectory' => '<%= @vendorDirectory %>'
+];

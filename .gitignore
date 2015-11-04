@@ -1,0 +1,17 @@
+/.idea/
+/.vagrant/
+/app/bootstrap.php.cache
+/app/check.php
+/app/SymfonyRequirements.php
+/app/cache/*
+!app/cache/.gitkeep
+/app/config/parameters.yml
+/app/logs/*
+!app/logs/.gitkeep
+/app/phpunit.xml
+/bin/
+/vendor/
+/web/bundles/
+/coverage/
+vagrant/php/vagrantEnvironment.php
+vagrant/sh/directoryPermissions.sh
