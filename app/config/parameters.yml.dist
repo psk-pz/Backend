@@ -10,4 +10,4 @@ parameters:
     mailer_user:       ~
     mailer_password:   ~
 
-    secret:            ThisTokenIsNotSoSecretChangeIt
+    secret:            IdSDGAJBPLO6lai5FwdvVNZF678lTMPiwdgoRFHZQ7lt9hmROA
