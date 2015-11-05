@@ -70,6 +70,15 @@ package { 'php5-apcu':
   ]
 }
 
+package { 'php5-pgsql':
+  ensure  => 'installed',
+  notify  => Service['php5-fpm'],
+  require => [
+    Class['apt'],
+    Package['php5-fpm']
+  ]
+}
+
 if $enableXdebug {
   package { 'php5-xdebug':
     ensure  => 'installed',
