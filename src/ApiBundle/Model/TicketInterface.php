@@ -1,7 +1,21 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: diwaniec
- * Date: 2015-11-05
- * Time: 13:31
- */
+
+namespace ApiBundle\Model;
+
+interface TicketInterface
+{
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return TicketInterface
+     */
+    public function setTitle($title);
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle();
+}

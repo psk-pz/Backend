@@ -8,6 +8,6 @@ class TicketController extends FOSRestController
 {
     public function getTicketAction($id)
     {
-        return $this->getDoctrine()->getManager()->getRepository('ApiBundle:Ticket')->find($id);
+        return $this->get('api.ticket.resource')->get($id);
     }
 }

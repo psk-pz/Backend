@@ -1,0 +1,8 @@
+parameters:
+    api.ticket.class: ApiBundle\Entity\Ticket
+    api.ticket.resource.class: ApiBundle\Service\Resource\TicketResource
+
+services:
+    api.ticket.resource:
+        class: %api.ticket.resource.class%
+        arguments: [@doctrine.orm.entity_manager, @"%api.ticket.class%"]
