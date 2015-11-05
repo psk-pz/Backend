@@ -25,7 +25,10 @@
     "nelmio/api-doc-bundle": "^2.10"
   },
   "require-dev": {
-    "sensio/generator-bundle": "~2.3"
+    "sensio/generator-bundle": "~2.3",
+    "doctrine/doctrine-fixtures-bundle": "^2.3",
+    "phpunit/phpunit": "^4.8",
+    "liip/functional-test-bundle": "^1.2"
   },
   "scripts": {
     "post-install-cmd": [

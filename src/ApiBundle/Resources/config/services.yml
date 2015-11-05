@@ -5,4 +5,4 @@ parameters:
 services:
     api.ticket.resource:
         class: %api.ticket.resource.class%
-        arguments: [@doctrine.orm.entity_manager, @"%api.ticket.class%"]
+        arguments: [@doctrine.orm.entity_manager, %api.ticket.class%]
