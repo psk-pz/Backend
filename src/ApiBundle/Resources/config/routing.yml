@@ -1,0 +1,5 @@
+api_v1_ticket:
+    type: rest
+    prefix: /v1
+    name_prefix: api_v1_
+    resource: "ApiBundle\Controller\V1\TicketController"
