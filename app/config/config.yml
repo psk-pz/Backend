@@ -70,10 +70,12 @@ fos_rest:
         formats:
             json: true
             xml:  true
+        templating_formats:
+            html: false
 
     format_listener:
         rules:
-            - { path: ^/, priorities: [ json, xml ], fallback_format: json, prefer_extension: true }
+            - { path: ^/api/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
 
     body_listener: true
     allowed_methods_listener: true

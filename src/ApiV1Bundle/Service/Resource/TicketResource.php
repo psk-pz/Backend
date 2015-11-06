@@ -2,7 +2,6 @@
 
 namespace ApiV1Bundle\Service\Resource;
 
-use ApiV1Bundle\Model\TicketInterface;
 use ApiV1Bundle\Model\TicketResourceInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\Common\Persistence\ObjectRepository;

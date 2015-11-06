@@ -1,5 +1,4 @@
 apiv1:
     type: rest
     prefix: api/v1
-    defaults: {_format: json}
     resource: "@ApiV1Bundle/Resources/config/routing.yml"
