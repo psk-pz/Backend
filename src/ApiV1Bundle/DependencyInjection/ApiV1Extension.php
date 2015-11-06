@@ -7,7 +7,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\Config\FileLocator;
 
-class ApiExtension extends Extension
+class ApiV1Extension extends Extension
 {
     /**
      * {@inheritDoc}

@@ -14,14 +14,11 @@ class TicketController extends FOSRestController
     /**
      * Description.
      *
-     * @Rest\View
-     * @Rest\Get("/user/{id}.{_format}", requirements={"id" = "\d+"})
-     *
      * @param integer $id Ticket's id
      * @return TicketInterface
      */
     public function getTicketAction($id)
     {
-        return $this->get('api.ticket.resource')->get($id);
+        return $this->get('apiv1.ticket.resource')->get($id);
     }
 }

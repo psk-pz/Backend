@@ -1,8 +1,13 @@
 parameters:
-    api.ticket.class: ApiV1Bundle\Entity\Ticket
-    api.ticket.resource.class: ApiV1Bundle\Service\Resource\TicketResource
+    apiv1.lazy_inflector.class: ApiV1Bundle\Service\LazyInflector
+
+    apiv1.ticket.class: ApiV1Bundle\Entity\Ticket
+    apiv1.ticket.resource.class: ApiV1Bundle\Service\Resource\TicketResource
 
 services:
-    api.ticket.resource:
-        class: %api.ticket.resource.class%
-        arguments: [@doctrine.orm.entity_manager, %api.ticket.class%]
+    apiv1.lazy_inflector:
+            class: %apiv1.lazy_inflector.class%
+
+    apiv1.ticket.resource:
+        class: %apiv1.ticket.resource.class%
+        arguments: [@doctrine.orm.entity_manager, %apiv1.ticket.class%]
