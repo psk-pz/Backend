@@ -15,7 +15,7 @@ class TicketResource implements TicketResourceInterface
     /** @var ObjectManager */
     private $om;
 
-    /** @var TicketInterface */
+    /** @var string */
     private $entity;
 
     /** @var ObjectRepository */
@@ -24,13 +24,13 @@ class TicketResource implements TicketResourceInterface
     /**
      * Injects service's dependencies.
      *
-     * @param ObjectManager   $om
-     * @param TicketInterface $entityClass
+     * @param ObjectManager $om
+     * @param string        $entity
      */
-    public function __construct(ObjectManager $om, TicketInterface $entityClass)
+    public function __construct(ObjectManager $om, $entity)
     {
         $this->om = $om;
-        $this->entity = $entityClass;
+        $this->entity = $entity;
         $this->repository = $this->om->getRepository($this->entity);
     }
 

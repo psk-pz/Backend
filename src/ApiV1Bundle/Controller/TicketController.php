@@ -19,6 +19,6 @@ class TicketController extends FOSRestController
      */
     public function getTicketAction($id)
     {
-        return $this->get('apiv1.ticket.resource')->get($id);
+        return $this->get('apiv1.resource.ticket')->get($id);
     }
 }
