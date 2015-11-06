@@ -4,7 +4,7 @@ namespace ApiV1Bundle\Model;
 
 /**
  * Interface for ticket entity.
- * Creates a more flexible application design.
+ * Enables more flexible application design.
  */
 interface TicketInterface
 {
