@@ -2,15 +2,16 @@
 
 namespace ApiBundle\Entity;
 
+use ApiBundle\Model\TicketInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Ticket
+ * Represents ticket entity.
  *
  * @ORM\Table()
  * @ORM\Entity
  */
-class Ticket
+class Ticket implements TicketInterface
 {
     /**
      * @var integer
@@ -30,9 +31,7 @@ class Ticket
 
 
     /**
-     * Get id
-     *
-     * @return integer
+     * {@inheritdoc}
      */
     public function getId()
     {
@@ -40,11 +39,7 @@ class Ticket
     }
 
     /**
-     * Set title
-     *
-     * @param string $title
-     *
-     * @return Ticket
+     * {@inheritdoc}
      */
     public function setTitle($title)
     {
@@ -54,13 +49,10 @@ class Ticket
     }
 
     /**
-     * Get title
-     *
-     * @return string
+     * {@inheritdoc}
      */
     public function getTitle()
     {
         return $this->title;
     }
 }
-

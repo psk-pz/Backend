@@ -2,12 +2,24 @@
 
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
+/**
+ * Handles all requests forwarded from front controller.
+ */
 class AppKernel extends Kernel
 {
-    private $cacheDir;
-    private $logDir;
+    /** @var string */
+    private $cacheDir = null;
 
+    /** @var string */
+    private $logDir = null;
+
+    /**
+     * Returns all bundles, that must be enabled.
+     *
+     * @return Bundle[]
+     */
     public function registerBundles()
     {
         $bundles = [
@@ -37,21 +49,43 @@ class AppKernel extends Kernel
         return $bundles;
     }
 
+    /**
+     * Loads application's configuration for specific environment.
+     *
+     * @param LoaderInterface $loader
+     */
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load($this->getRootDir() . '/config/config_' . $this->getEnvironment() . '.yml');
     }
 
+    /**
+     * Sets alternative cache directory location.
+     *
+     * @param string $cacheDir
+     */
     public function setCacheDir($cacheDir)
     {
         $this->cacheDir = $cacheDir;
     }
 
+    /**
+     * Sets alternative log directory location.
+     *
+     * @param string $logDir
+     */
     public function setLogDir($logDir)
     {
         $this->logDir = $logDir;
     }
 
+    /**
+     * Return cache directory location.
+     * If alternative location wasn't set returns default location.
+     * Default location is always returned in production environment.
+     *
+     * @return string
+     */
     public function getCacheDir()
     {
         if (in_array($this->environment, ['dev', 'test']) && $this->cacheDir) {
@@ -61,6 +95,13 @@ class AppKernel extends Kernel
         return parent::getCacheDir();
     }
 
+    /**
+     * Return log directory location.
+     * If alternative location wasn't set returns default location.
+     * Default location is always returned in production environment.
+     *
+     * @return string
+     */
     public function getLogDir()
     {
         if (in_array($this->environment, ['dev', 'test']) && $this->logDir) {

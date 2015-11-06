@@ -2,8 +2,16 @@
 
 namespace Vagrant;
 
+/**
+ * Utilities to support composer.
+ */
 class Composer
 {
+    /**
+     * Copies vendor's folder outside vagrant's synced folder.
+     * Then application reads files from there, which speeds up execution.
+     * It only applies to development environment.
+     */
     public static function rsync()
     {
         $vagrantEnvironment = false;
