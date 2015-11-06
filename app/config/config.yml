@@ -1,7 +1,7 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: services.yml }
+    - { resource: "@ApiV1Bundle/Resources/config/services.yml" }
 
 parameters:
     locale: en
@@ -68,12 +68,12 @@ fos_rest:
     view:
         view_response_listener: 'force'
         formats:
-            xml:  true
             json: true
+            xml:  true
 
     format_listener:
         rules:
-            - { path: ^/, priorities: [ json, xml ], fallback_format: ~, prefer_extension: true }
+            - { path: ^/, priorities: [ json, xml ], fallback_format: json, prefer_extension: true }
 
     body_listener: true
     allowed_methods_listener: true

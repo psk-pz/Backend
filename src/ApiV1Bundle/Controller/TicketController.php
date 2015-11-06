@@ -7,14 +7,14 @@ use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 
 /**
- * Description.
+ * Controller for actions related with ticket resource.
  */
 class TicketController extends FOSRestController
 {
     /**
-     * Description.
+     * Returns ticket by it's identifier.
      *
-     * @param integer $id Ticket's id
+     * @param integer $id
      * @return TicketInterface
      */
     public function getTicketAction($id)
