@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiBundle\DependencyInjection;
+namespace ApiV1Bundle\DependencyInjection;
 
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\ContainerBuilder;

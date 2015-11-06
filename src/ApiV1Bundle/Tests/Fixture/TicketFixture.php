@@ -1,8 +1,8 @@
 <?php
 
-namespace ApiBundle\Tests\Fixture;
+namespace ApiV1Bundle\Tests\Fixture;
 
-use ApiBundle\Entity\Ticket;
+use ApiV1Bundle\Entity\Ticket;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 

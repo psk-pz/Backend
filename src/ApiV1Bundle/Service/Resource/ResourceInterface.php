@@ -1,8 +1,8 @@
 <?php
 
-namespace ApiBundle\Service\Resource;
+namespace ApiV1Bundle\Service\Resource;
 
-use ApiBundle\Model\TicketInterface;
+use ApiV1Bundle\Model\TicketInterface;
 
 interface ResourceInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace ApiBundle\Entity;
+namespace ApiV1Bundle\Entity;
 
-use ApiBundle\Model\TicketInterface;
+use ApiV1Bundle\Model\TicketInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

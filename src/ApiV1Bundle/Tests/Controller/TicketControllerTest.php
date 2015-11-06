@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiBundle\Tests\Controller;
+namespace ApiV1Bundle\Tests\Controller;
 
 use Liip\FunctionalTestBundle\Test\WebTestCase as WebTestCase;
 
@@ -8,7 +8,7 @@ class TicketControllerTest extends WebTestCase
 {
     public function testJsonGetPageAction()
     {
-        $this->loadFixtures(['ApiBundle\Tests\Fixture\TicketFixture']);
+        $this->loadFixtures(['ApiV1Bundle\Tests\Fixture\TicketFixture']);
 
         $client = static::createClient();
         $route = $this->getUrl('api_1_get_page', ['id' => '1', '_format' => 'json']);

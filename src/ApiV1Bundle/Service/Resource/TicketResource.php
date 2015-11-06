@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiBundle\Service\Resource;
+namespace ApiV1Bundle\Service\Resource;
 
 use Doctrine\Common\Persistence\ObjectManager;
 

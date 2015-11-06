@@ -1,12 +1,12 @@
 <?php
 
-namespace ApiBundle;
+namespace ApiV1Bundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class used to register bundle.
  */
-class ApiBundle extends Bundle
+class ApiV1Bundle extends Bundle
 {
 }

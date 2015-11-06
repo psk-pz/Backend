@@ -1,6 +1,6 @@
 parameters:
-    api.ticket.class: ApiBundle\Entity\Ticket
-    api.ticket.resource.class: ApiBundle\Service\Resource\TicketResource
+    api.ticket.class: ApiV1Bundle\Entity\Ticket
+    api.ticket.resource.class: ApiV1Bundle\Service\Resource\TicketResource
 
 services:
     api.ticket.resource:
