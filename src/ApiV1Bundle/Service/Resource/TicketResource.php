@@ -2,35 +2,23 @@
 
 namespace ApiV1Bundle\Service\Resource;
 
-use ApiV1Bundle\Model\TicketResourceInterface;
-use Doctrine\Common\Persistence\ObjectManager;
-use Doctrine\Common\Persistence\ObjectRepository;
+use ApiV1Bundle\Model\Ticket\TicketResourceInterface;
+use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
 
 /**
  * Service encapsulating business logic related with ticket resource.
  */
 class TicketResource implements TicketResourceInterface
 {
-    /** @var ObjectManager */
-    private $om;
-
-    /** @var string */
-    private $entity;
-
-    /** @var ObjectRepository */
+    /** @var TicketResourceInterface */
     private $repository;
 
     /**
-     * Injects service's dependencies.
-     *
-     * @param ObjectManager $om
-     * @param string        $entity
+     * {@inheritdoc}
      */
-    public function __construct(ObjectManager $om, $entity)
+    public function __construct(TicketRepositoryInterface $repository)
     {
-        $this->om = $om;
-        $this->entity = $entity;
-        $this->repository = $this->om->getRepository($this->entity);
+        $this->repository = $repository;
     }
 
     /**
@@ -38,6 +26,6 @@ class TicketResource implements TicketResourceInterface
      */
     public function get($id)
     {
-        return $this->repository->find($id);
+        return $this->repository->getById($id);
     }
 }

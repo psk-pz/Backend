@@ -2,14 +2,14 @@
 
 namespace ApiV1Bundle\Entity;
 
-use ApiV1Bundle\Model\TicketInterface;
+use ApiV1Bundle\Model\Ticket\TicketInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Represents ticket entity.
  *
  * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="ApiV1Bundle\Repository\TicketRepository")
  */
 class Ticket implements TicketInterface
 {

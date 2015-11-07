@@ -1,6 +1,6 @@
 <?php
 
-namespace ApiV1Bundle\Model;
+namespace ApiV1Bundle\Model\Ticket;
 
 /**
  * Interface for ticket entity.
