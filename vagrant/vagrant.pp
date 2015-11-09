@@ -24,7 +24,7 @@ $nginxAccessLogPath = '/var/log/nginx/backend_access.log'
 $phpConfigurationPath = '/etc/php5/fpm/php.ini'
 $xdebugConfigurationPath = '/etc/php5/fpm/conf.d/20-xdebug.ini'
 $xdebugKey = 'vagrant'
-$xdebugEnable = false
+$enableXdebug = true
 
 apt::ppa { 'ppa:ondrej/php5-5.6': }
 
