@@ -3,49 +3,55 @@
 namespace ApiV1Bundle\Service\Resource;
 
 use ApiV1Bundle\Model\Ticket\TicketInterface;
-use ApiV1Bundle\Model\Ticket\TicketResourceInterface;
 use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
+use ApiV1Bundle\Model\Ticket\TicketResourceInterface;
 
 /**
- * Service encapsulating business logic related with ticket resource.
+ * Service encapsulating additional business logic related with resource.
  */
 class TicketResource implements TicketResourceInterface
 {
-    /** @var TicketInterface */
-    protected $prototype;
-
     /** @var TicketResourceInterface */
     protected $repository;
 
     /**
-     * {@inheritdoc}
+     * Injects dependencies.
+     *
+     * @param TicketRepositoryInterface $repository
      */
-    public function __construct(TicketInterface $prototype, TicketRepositoryInterface $repository)
+    public function __construct(TicketRepositoryInterface $repository)
     {
-        $this->prototype = $prototype;
         $this->repository = $repository;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function createNew()
+    public function create()
     {
-        return clone $this->prototype;
+        return $this->repository->create();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save()
+    public function save(TicketInterface $entity)
     {
-        $this->repository->save();
+        $this->repository->save($entity);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function get($id)
+    public function delete(TicketInterface $entity)
+    {
+        $this->repository->delete($entity);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getById($id)
     {
         return $this->repository->getById($id);
     }

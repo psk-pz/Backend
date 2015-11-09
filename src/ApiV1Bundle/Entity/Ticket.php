@@ -6,7 +6,7 @@ use ApiV1Bundle\Model\Ticket\TicketInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Represents ticket entity.
+ * Entity's implementation for Doctrine ORM.
  *
  * @ORM\Table()
  * @ORM\Entity(repositoryClass="ApiV1Bundle\Repository\TicketRepository")
@@ -20,14 +20,14 @@ class Ticket implements TicketInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
      * @ORM\Column(name="title", type="text")
      */
-    private $title;
+    protected $title;
 
 
     /**

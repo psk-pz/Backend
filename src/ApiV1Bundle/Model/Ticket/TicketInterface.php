@@ -3,20 +3,20 @@
 namespace ApiV1Bundle\Model\Ticket;
 
 /**
- * Interface for ticket entity.
- * Enables more flexible application design.
+ * Entity's interface used to provide more flexible design.
+ * Intentionally designed as an anemic domain model.
  */
 interface TicketInterface
 {
     /**
-     * Gets ticket's identifier.
+     * Gets entity's identifier.
      *
      * @return integer
      */
     public function getId();
 
     /**
-     * Sets ticket's title.
+     * Sets entity's title.
      *
      * @param string $title
      * @return TicketInterface
@@ -24,7 +24,7 @@ interface TicketInterface
     public function setTitle($title);
 
     /**
-     * Get's ticket title.
+     * Gets entity's title.
      *
      * @return string
      */

@@ -8,19 +8,46 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 
 /**
- * Repository of tickets responsible for data retrieval and persistence.
+ * Repository of entities responsible for data retrieval and persistence.
  */
 class TicketRepository extends EntityRepository implements TicketRepositoryInterface
 {
     /**
-     * Description.
-     *
-     * @param TicketInterface $entity
+     * {@inheritdoc}
      */
-    public function save(TicketInterface $entity)
+    public function create()
     {
-        $this->_em->persist($entity);
-        $this->_em->flush();
+        return $this->getClassMetadata()->newInstance();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function commitTransaction()
+    {
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save(TicketInterface $entity, $autoCommit = true)
+    {
+        $this->getEntityManager()->persist($entity);
+        if ($autoCommit) {
+            $this->getEntityManager()->flush($entity);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function delete(TicketInterface $entity, $autoCommit = false)
+    {
+        $this->getEntityManager()->remove($entity);
+        if ($autoCommit) {
+            $this->getEntityManager()->flush($entity);
+        }
     }
 
     /**
@@ -28,14 +55,13 @@ class TicketRepository extends EntityRepository implements TicketRepositoryInter
      */
     public function getById($id)
     {
-        $queryBuilder = $this->_em->createQueryBuilder();
-        $query = $queryBuilder->select('Ticket')->from('ApiV1Bundle:Ticket', 'Ticket');
+        $queryBuilder = $this->createQueryBuilder('Ticket');
 
-        $query->andWhere('Ticket.id = :id')->setParameter('id', $id);
-        $query->setMaxResults(1);
+        $queryBuilder->andWhere('Ticket.id = :id')->setParameter('id', $id);
+        $queryBuilder->setMaxResults(1);
 
         try {
-            return $query->getQuery()->getSingleResult();
+            return $queryBuilder->getQuery()->getSingleResult();
         } catch (NoResultException $exception) {
             return null;
         }

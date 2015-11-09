@@ -6,7 +6,7 @@ use FOS\RestBundle\Util\Inflector\InflectorInterface;
 
 /**
  * This inflector does nothing.
- * This behaviour is intended to enable properly route generation.
+ * This behaviour is intended to enable proper route generation.
  */
 class LazyInflector implements InflectorInterface
 {

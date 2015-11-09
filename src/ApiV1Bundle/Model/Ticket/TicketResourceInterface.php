@@ -3,31 +3,37 @@
 namespace ApiV1Bundle\Model\Ticket;
 
 /**
- * Interface for ticket resource.
- * Enables more flexible application design.
+ * Interface for resource.
+ * Adheres to indirection principle and makes controller more thin.
  */
 interface TicketResourceInterface
 {
     /**
-     * Injects dependencies.
-     *
-     * @param TicketInterface $prototype
-     * @param TicketRepositoryInterface $repository
-     */
-    public function __construct(TicketInterface $prototype, TicketRepositoryInterface $repository);
-
-    /**
-     * Creates new resource by cloning prototype.
+     * Creates new resource.
      *
      * @return TicketInterface
      */
-    public function createNew();
+    public function create();
 
     /**
-     * Gets ticket by it's id.
+     * Persists resource into data store.
+     *
+     * @param TicketInterface $entity
+     */
+    public function save(TicketInterface $entity);
+
+    /**
+     * Purges resource from data store.
+     *
+     * @param TicketInterface $entity
+     */
+    public function delete(TicketInterface $entity);
+
+    /**
+     * Retrieves resource by it's id.
      *
      * @param integer $id
      * @return TicketInterface
      */
-    public function get($id);
+    public function getById($id);
 }
