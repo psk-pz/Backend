@@ -2,6 +2,7 @@
 
 namespace ApiV1Bundle\Service\Resource;
 
+use ApiV1Bundle\Model\Ticket\TicketInterface;
 use ApiV1Bundle\Model\Ticket\TicketResourceInterface;
 use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
 
@@ -10,15 +11,35 @@ use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
  */
 class TicketResource implements TicketResourceInterface
 {
+    /** @var TicketInterface */
+    protected $prototype;
+
     /** @var TicketResourceInterface */
-    private $repository;
+    protected $repository;
 
     /**
      * {@inheritdoc}
      */
-    public function __construct(TicketRepositoryInterface $repository)
+    public function __construct(TicketInterface $prototype, TicketRepositoryInterface $repository)
     {
+        $this->prototype = $prototype;
         $this->repository = $repository;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createNew()
+    {
+        return clone $this->prototype;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function save()
+    {
+        $this->repository->save();
     }
 
     /**

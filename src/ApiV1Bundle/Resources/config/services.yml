@@ -1,6 +1,8 @@
 parameters:
     apiv1.routing.lazy_inflector.class: ApiV1Bundle\Service\Routing\LazyInflector
 
+    apiv1.factory.repository.class: ApiV1Bundle\Service\Factory\CustomRepositoryFactory
+
     apiv1.entity.ticket.class: ApiV1Bundle\Entity\Ticket
     apiv1.repository.ticket.class: ApiV1Bundle\Repository\TicketRepository
     apiv1.resource.ticket.class: ApiV1Bundle\Service\Resource\TicketResource
@@ -9,16 +11,18 @@ services:
     apiv1.routing.lazy_inflector:
         class: %apiv1.routing.lazy_inflector.class%
 
+    apiv1.factory.repository:
+        class: %apiv1.factory.repository.class%
+
     apiv1.entity.ticket:
         class: %apiv1.entity.ticket.class%
 
     apiv1.repository.ticket:
         class: %apiv1.repository.ticket.class%
-        factory_service: doctrine.orm.default_entity_manager
-        factory_method: getRepository
+        factory: [@doctrine.orm.entity_manager, getRepository]
         arguments:
             - %apiv1.entity.ticket.class%
 
-    apiv1.resource.ticket:
-        class: %apiv1.resource.ticket.class%
-        arguments: [@apiv1.repository.ticket]
+        apiv1.resource.ticket:
+            class: %apiv1.resource.ticket.class%
+            arguments: [@apiv1.entity.ticket, @apiv1.repository.ticket]

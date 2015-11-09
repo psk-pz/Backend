@@ -2,6 +2,7 @@
 
 namespace ApiV1Bundle\Repository;
 
+use ApiV1Bundle\Model\Ticket\TicketInterface;
 use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
@@ -11,6 +12,17 @@ use Doctrine\ORM\NoResultException;
  */
 class TicketRepository extends EntityRepository implements TicketRepositoryInterface
 {
+    /**
+     * Description.
+     *
+     * @param TicketInterface $entity
+     */
+    public function save(TicketInterface $entity)
+    {
+        $this->_em->persist($entity);
+        $this->_em->flush();
+    }
+
     /**
      * {@inheritdoc}
      */

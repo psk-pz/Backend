@@ -11,9 +11,17 @@ interface TicketResourceInterface
     /**
      * Injects dependencies.
      *
+     * @param TicketInterface $prototype
      * @param TicketRepositoryInterface $repository
      */
-    public function __construct(TicketRepositoryInterface $repository);
+    public function __construct(TicketInterface $prototype, TicketRepositoryInterface $repository);
+
+    /**
+     * Creates new resource by cloning prototype.
+     *
+     * @return TicketInterface
+     */
+    public function createNew();
 
     /**
      * Gets ticket by it's id.
