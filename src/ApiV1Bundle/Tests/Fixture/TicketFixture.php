@@ -2,7 +2,7 @@
 
 namespace ApiV1Bundle\Tests\Fixture;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -10,7 +10,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Holds predefined data to insert.
  */
-class TicketFixture implements FixtureInterface, ContainerAwareInterface
+class TicketFixture extends AbstractFixture implements ContainerAwareInterface
 {
     /** @var ContainerInterface */
     private $container;
@@ -31,18 +31,23 @@ class TicketFixture implements FixtureInterface, ContainerAwareInterface
 
         $ticket1 = $repository->create();
         $ticket1->setTitle('ticket1');
+        $this->setReference('ticket1', $ticket1);
 
         $ticket2 = $repository->create();
         $ticket2->setTitle('ticket2');
+        $this->setReference('ticket2', $ticket2);
 
         $ticket3 = $repository->create();
         $ticket3->setTitle('ticket3');
+        $this->setReference('ticket3', $ticket3);
 
         $ticket4 = $repository->create();
         $ticket4->setTitle('ticket4');
+        $this->setReference('ticket4', $ticket4);
 
         $ticket5 = $repository->create();
         $ticket5->setTitle('ticket5');
+        $this->setReference('ticket5', $ticket5);
 
         $repository->save($ticket1, false);
         $repository->save($ticket2, false);
