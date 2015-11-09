@@ -81,6 +81,21 @@ package { 'php5-pgsql':
   ]
 }
 
+package { 'sqlite':
+  ensure  => 'installed',
+  require => Class['apt']
+}
+
+package { 'php5-sqlite':
+  ensure  => 'installed',
+  notify  => Service['php5-fpm'],
+  require => [
+    Class['apt'],
+    Package['php5-fpm'],
+    Package['sqlite']
+  ]
+}
+
 if $enableXdebug {
   package { 'php5-xdebug':
     ensure  => 'installed',
