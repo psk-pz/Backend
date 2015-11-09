@@ -23,14 +23,6 @@ class TicketRepository extends EntityRepository implements TicketRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function commitTransaction()
-    {
-        $this->getEntityManager()->flush();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function save(TicketInterface $entity, $autoCommit = true)
     {
         $this->getEntityManager()->persist($entity);
@@ -48,6 +40,14 @@ class TicketRepository extends EntityRepository implements TicketRepositoryInter
         if ($autoCommit) {
             $this->getEntityManager()->flush($entity);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function commitTransaction()
+    {
+        $this->getEntityManager()->flush();
     }
 
     /**
