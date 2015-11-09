@@ -26,6 +26,8 @@ $xdebugConfigurationPath = '/etc/php5/fpm/conf.d/20-xdebug.ini'
 $xdebugKey = 'vagrant'
 $xdebugEnable = false
 
+apt::ppa { 'ppa:ondrej/php5-5.6': }
+
 class { 'apt':
   update => {
     frequency => 'always'
@@ -179,6 +181,11 @@ exec { 'composer':
     File['vagrant environment for php'],
     Exec['symfony directories permissions']
   ]
+}
+
+class { 'php_phars':
+  phars      => ['phpunit', 'php-cs-fixer'],
+  redownload => true
 }
 
 package { 'nginx':
