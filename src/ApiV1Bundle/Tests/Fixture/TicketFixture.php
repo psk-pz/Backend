@@ -2,15 +2,24 @@
 
 namespace ApiV1Bundle\Tests\Fixture;
 
-use ApiV1Bundle\Entity\Ticket;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Holds predefined data to insert.
  */
-class TicketFixture implements FixtureInterface
+class TicketFixture implements FixtureInterface, ContainerAwareInterface
 {
+    /** @var ContainerInterface */
+    private $container;
+
+    public function setContainer(ContainerInterface $container = null)
+    {
+        $this->container = $container;
+    }
+
     /**
      * Inserts example tickets into database.
      *
@@ -18,9 +27,28 @@ class TicketFixture implements FixtureInterface
      */
     public function load(ObjectManager $manager)
     {
-        $ticket = new Ticket();
-        $ticket->setTitle('ticket');
-        $manager->persist($ticket);
-        $manager->flush();
+        $repository = $this->container->get('apiv1.repository.ticket');
+
+        $ticket1 = $repository->create();
+        $ticket1->setTitle('ticket1');
+
+        $ticket2 = $repository->create();
+        $ticket2->setTitle('ticket2');
+
+        $ticket3 = $repository->create();
+        $ticket3->setTitle('ticket3');
+
+        $ticket4 = $repository->create();
+        $ticket4->setTitle('ticket4');
+
+        $ticket5 = $repository->create();
+        $ticket5->setTitle('ticket5');
+
+        $repository->save($ticket1, false);
+        $repository->save($ticket2, false);
+        $repository->save($ticket3, false);
+        $repository->save($ticket4, false);
+        $repository->save($ticket5, false);
+        $repository->commitTransaction();
     }
 }

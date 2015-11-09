@@ -13,6 +13,8 @@ interface TicketRepositoryInterface
     /**
      * Creates new instance of entity.
      * Lowers coupling between repository and entity.
+     *
+     * @return TicketInterface
      */
     public function create();
 
