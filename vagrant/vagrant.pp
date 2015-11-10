@@ -22,7 +22,7 @@ $nginxErrorLogPath = '/var/log/nginx/backend_error.log'
 $nginxAccessLogPath = '/var/log/nginx/backend_access.log'
 
 $phpConfigurationPath = '/etc/php5/fpm/php.ini'
-$xdebugConfigurationPath = '/etc/php5/fpm/conf.d/20-xdebug.ini'
+$xdebugConfigurationPath = '/etc/php5/mods-available/xdebug.ini'
 $xdebugKey = 'vagrant'
 
 apt::ppa { 'ppa:ondrej/php5-5.6': }
@@ -224,24 +224,33 @@ file { 'nginx configuration':
 
 class { 'postgresql::server':
   postgres_password => 'postgres'
-}->
+}
+
 postgresql::server::role { 'backend':
   password_hash => postgresql_password('backend', 'backend')
-}->
+}
+
 postgresql::server::database_grant { 'backend':
   privilege => 'ALL',
   db        => 'backend',
   role      => 'backend'
-}->
+}
+
 postgresql::server::db { 'backend':
   user     => 'backend',
   password => postgresql_password('backend', 'backend')
-}->
+}
+
 exec { 'create database schema':
   command     => 'php app/console doctrine:schema:update --force -n',
   path        => '/usr/bin',
   cwd         => '/vagrant',
-  require     => Exec['composer']
+  require     => [
+    Exec['composer'],
+    Postgresql::Server::Role['backend'],
+    Postgresql::Server::Database_grant['backend'],
+    Postgresql::Server::Db['backend']
+  ]
 }
 
 exec { 'load fixtures':
