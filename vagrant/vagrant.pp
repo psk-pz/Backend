@@ -113,9 +113,9 @@ file { 'xdebug configuration':
 }
 
 exec { 'open xdebug port':
-    command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
-    path    => ['/sbin', '/usr/share']
-  }
+  command => 'iptables -t nat -A PREROUTING -p tcp --dport 8000 -j REDIRECT --to-port 80',
+  path    => ['/sbin', '/usr/share']
+}
 
 file_line { 'php.ini realpath_cache':
   path    => $phpConfigurationPath,
@@ -224,19 +224,31 @@ file { 'nginx configuration':
 
 class { 'postgresql::server':
   postgres_password => 'postgres'
-}
-
+}->
 postgresql::server::role { 'backend':
   password_hash => postgresql_password('backend', 'backend')
-}
-
-postgresql::server::db { 'backend':
-  user     => 'backend',
-  password => postgresql_password('backend', 'backend')
-}
-
+}->
 postgresql::server::database_grant { 'backend':
   privilege => 'ALL',
   db        => 'backend',
   role      => 'backend'
+}->
+postgresql::server::db { 'backend':
+  user     => 'backend',
+  password => postgresql_password('backend', 'backend')
+}->
+exec { 'create database schema':
+  command     => 'php app/console doctrine:schema:update --force -n',
+  path        => '/usr/bin',
+  cwd         => '/vagrant',
+  require     => Exec['composer']
+}
+
+exec { 'load fixtures':
+  command     => 'php app/console doctrine:fixtures:load -n',
+  path        => '/usr/bin',
+  cwd         => '/vagrant',
+  require     => [
+    Exec['create database schema']
+  ]
 }

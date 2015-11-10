@@ -6,10 +6,7 @@ php:
   - 7.0
   - nightly
 
-before_script:
-  - psql -c 'create database backend;' -U postgres
-  - cp app/config/parameters.yml.travis app/config/parameters.yml
-  - composer install
+before_script: composer install
 
 script: phpunit --coverage-clover=app/logs/coverage.clover
 
