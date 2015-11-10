@@ -37,8 +37,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "app/console doctrine:schema:update --force -n",
-      "app/console doctrine:fixtures:load -n"
+      "php app/console doctrine:schema:update --force -n",
+      "php app/console doctrine:fixtures:load -n"
     ],
     "post-update-cmd": [
       "Vagrant\\Composer::rsync",
@@ -46,8 +46,8 @@
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "app/console doctrine:schema:update --force -n",
-      "app/console doctrine:fixtures:load -n"
+      "php app/console doctrine:schema:update --force -n",
+      "php app/console doctrine:fixtures:load -n"
     ]
   },
   "config": {
