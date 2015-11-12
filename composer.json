@@ -36,18 +36,14 @@
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "app/console doctrine:schema:update --force -n",
-      "app/console doctrine:fixtures:load -n"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
     ],
     "post-update-cmd": [
       "Vagrant\\Composer::rsync",
       "Incenteev\\ParameterHandler\\ScriptHandler::buildParameters",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
       "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache",
-      "app/console doctrine:schema:update --force -n",
-      "app/console doctrine:fixtures:load -n"
+      "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::clearCache"
     ]
   },
   "config": {
