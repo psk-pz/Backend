@@ -33,7 +33,7 @@ interface TicketResourceInterface
      * Retrieves resource by it's id.
      *
      * @param integer $id
-     * @return TicketInterface
+     * @return TicketInterface | null
      */
     public function getById($id);
 }

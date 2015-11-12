@@ -18,17 +18,12 @@ class TicketControllerTest extends WebTestCase
     public function setUp()
     {
         /** @var \Doctrine\Common\DataFixtures\Executor\AbstractExecutor $executor */
-        $executor = $this->loadFixtures(
-            [
-                'ApiV1Bundle\DataFixtures\ORM\TicketFixture'
-            ]
-        );
-
+        $executor = $this->loadFixtures(['ApiV1Bundle\DataFixtures\ORM\TicketFixture']);
         $this->fixtures = $executor->getReferenceRepository();
     }
 
     /**
-     * Checks resource request using the GET method.
+     * Checks single resource retrieval using the GET method.
      */
     public function testGetTicketAction()
     {
