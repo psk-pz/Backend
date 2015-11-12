@@ -2,7 +2,7 @@
 
 namespace ApiV1Bundle\Tests\Controller;
 
-use Liip\FunctionalTestBundle\Test\WebTestCase as WebTestCase;
+use Liip\FunctionalTestBundle\Test\WebTestCase;
 
 /**
  * Functional tests covering controller.

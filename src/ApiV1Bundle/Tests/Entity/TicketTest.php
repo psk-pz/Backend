@@ -15,7 +15,7 @@ class TicketTest extends PHPUnit_Framework_TestCase
     private $ticket;
 
     /**
-     * Creates new Instance of entity object, which will be shared between tests.
+     * Creates new instance of entity object, which will be shared between tests.
      */
     public function setUp()
     {

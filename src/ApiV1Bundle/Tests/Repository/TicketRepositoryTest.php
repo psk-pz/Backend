@@ -2,16 +2,46 @@
 
 namespace ApiV1Bundle\Tests\Controller;
 
-use PHPUnit_Framework_TestCase;
-use ApiV1Bundle\Repository\TicketRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use ApiV1Bundle\Repository\TicketRepository;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 /**
- * Unit and integration tests covering repository.
+ * Integration tests covering repository.
  */
-class TicketRepositoryTest extends PHPUnit_Framework_TestCase
+class TicketRepositoryTest extends KernelTestCase
 {
+    /** @var TicketRepository */
+    private $repository;
+
+    /**
+     * Prepares environment for executing tests.
+     */
+    public function setUp()
+    {
+        self::bootKernel();
+        $this->repository = static::$kernel->getContainer()->get('apiv1.repository.ticket');
+    }
+
+    /**
+     * Checks entity retrieval by it's id.
+     */
+    public function testGetById()
+    {
+        $ticket = $this->repository->getById(1);
+        $this->assertEquals(1, $ticket->getId());
+    }
+
+    /**
+     * Checks entity retrieval by it's id.
+     */
+    public function testGetByIdReturnNull()
+    {
+        $ticket = $this->repository->getById(6);
+        $this->assertEquals(null, $ticket);
+    }
+
     /**
      * Checks transaction committing.
      */
