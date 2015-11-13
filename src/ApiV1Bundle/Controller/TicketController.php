@@ -4,6 +4,7 @@ namespace ApiV1Bundle\Controller;
 
 use ApiV1Bundle\Model\Ticket\TicketInterface;
 use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Controller used to handle requests sent to application.
@@ -11,7 +12,9 @@ use FOS\RestBundle\Controller\FOSRestController;
 class TicketController extends FOSRestController
 {
     /**
-     * Returns resource by it's identifier.
+     * Returns ticket by it's identifier
+     *
+     * @ApiDoc()
      *
      * @param integer $id
      * @return TicketInterface

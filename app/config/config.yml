@@ -58,12 +58,14 @@ swiftmailer:
     password:  "%mailer_password%"
     spool:     { type: memory }
 
+nelmio_api_doc:
+    sandbox:
+        request_format:
+            method: accept_header
+
 fos_rest:
     routing_loader:
         default_format: json
-
-    service:
-        inflector: apiv1.routing.lazy_inflector
 
     view:
         view_response_listener: force

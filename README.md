@@ -15,18 +15,36 @@ Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
 Do uruchomienia projektu wymagany jest [**Vagrant**](https://www.vagrantup.com/downloads.html).
 
+Najpierw należy uruchomić maszynę wirtualną:
+
 ```
 $ cd /sciezka/do/projektu
 $ vagrant up
 ```
 
-Następnie w pliku *hosts* należy dodać:
+Następnie w pliku *hosts* należy dodać wpis:
 
 ```
 192.168.60.167 backend.psk-pz.dev
 ```
 
-Przykładowy zasób dostępny po instalacji: *backend.psk-pz.dev/api/v1/ticket/1.json*.
+Dokumentacja dostępna jest pod adresem *backend.psk-pz.dev/api/v1/doc*.
+
+## Testy
+
+Najpierw należy zalogować się do maszyny wirtualnej:
+
+```
+$ cd /sciezka/do/projektu
+$ vagrant ssh
+```
+
+Następnie uruchomić komendy:
+
+```
+$ cd /vagrant
+$ phpunit
+```
 
 ## Autorzy
 

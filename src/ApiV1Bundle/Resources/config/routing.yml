@@ -1,3 +1,7 @@
+apiv1_documentation:
+    prefix: doc
+    resource: "@NelmioApiDocBundle/Resources/config/routing.yml"
+
 apiv1_ticket:
     type: rest
     resource: ApiV1Bundle\Controller\TicketController
