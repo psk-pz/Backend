@@ -31,22 +31,27 @@ class TicketFixture extends AbstractFixture implements ContainerAwareInterface
 
         $ticket1 = $repository->create();
         $ticket1->setTitle('ticket1');
+        $ticket1->setContent('Lorem ipsum dolor sit amet ticket1 elit.');
         $this->setReference('ticket1', $ticket1);
 
         $ticket2 = $repository->create();
         $ticket2->setTitle('ticket2');
+        $ticket2->setContent('Lorem ipsum dolor sit amet ticket2 elit.');
         $this->setReference('ticket2', $ticket2);
 
         $ticket3 = $repository->create();
         $ticket3->setTitle('ticket3');
+        $ticket3->setContent('Lorem ipsum dolor sit amet ticket3 elit.');
         $this->setReference('ticket3', $ticket3);
 
         $ticket4 = $repository->create();
         $ticket4->setTitle('ticket4');
+        $ticket4->setContent('Lorem ipsum dolor sit amet ticket4 elit.');
         $this->setReference('ticket4', $ticket4);
 
         $ticket5 = $repository->create();
         $ticket5->setTitle('ticket5');
+        $ticket5->setContent('Lorem ipsum dolor sit amet ticket5 elit.');
         $this->setReference('ticket5', $ticket5);
 
         $repository->save($ticket1, false);

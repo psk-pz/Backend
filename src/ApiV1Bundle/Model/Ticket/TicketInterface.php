@@ -29,4 +29,19 @@ interface TicketInterface
      * @return string
      */
     public function getTitle();
+
+    /**
+     * Sets entity's content.
+     *
+     * @param string $content
+     * @return TicketInterface
+     */
+    public function setContent($content);
+
+    /**
+     * Gets entity's content.
+     *
+     * @return string
+     */
+    public function getContent();
 }
