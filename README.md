@@ -15,7 +15,7 @@ Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
 Do uruchomienia projektu wymagany jest [**Vagrant**](https://www.vagrantup.com/downloads.html).
 
-Najpierw należy uruchomić maszynę wirtualną:
+Najpierw należy uruchomić maszynę wirtualną uruchamiając komendy:
 
 ```
 $ cd /sciezka/do/projektu
@@ -39,7 +39,7 @@ $ cd /sciezka/do/projektu
 $ vagrant ssh
 ```
 
-Następnie uruchomić komendy:
+Następnie należy uruchomić komendy:
 
 ```
 $ cd /vagrant
