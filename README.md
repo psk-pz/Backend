@@ -11,6 +11,23 @@ Część projektu z przedmiotu *projekt zespołowy*.
 
 Zaimplementowany za pomocą technologii *PHP* oraz framework'a *Symfony2*.
 
+## Instalacja
+
+Do uruchomienia projektu wymagany jest [**Vagrant**](https://www.vagrantup.com/downloads.html).
+
+```
+$ cd /sciezka/do/projektu
+$ vagrant up
+```
+
+Następnie w pliku *hosts* należy dodać:
+
+```
+192.168.60.167 backend.psk-pz.dev
+```
+
+Przykładowy zasób dostępny po instalacji: *backend.psk-pz.dev/api/v1/ticket/1.json*.
+
 ## Autorzy
 
 - [Politechnika Świętokrzyska - projekt zespołowy](https://github.com/psk-pz)

@@ -12,20 +12,68 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
  */
 class TicketRepositoryTest extends KernelTestCase
 {
+    /** @var EntityManager */
+    private $entityManager;
+
+    /** @var ClassMetadata */
+    private $classMetadata;
+
     /** @var TicketRepository */
     private $repository;
 
     /**
-     * Prepares environment for executing tests.
+     * Prepares repository instance for executing tests.
      */
     public function setUp()
     {
         self::bootKernel();
-        $this->repository = static::$kernel->getContainer()->get('apiv1.repository.ticket');
+
+        $container = static::$kernel->getContainer();
+        $entityName = $container->getParameter('apiv1.entity.ticket.class');
+
+        $this->entityManager = $container->get('doctrine')->getManager();
+        $this->classMetadata = new ClassMetadata($entityName);
+        $this->repository = new TicketRepository($this->entityManager, $this->classMetadata);
     }
 
     /**
-     * Checks entity retrieval by it's id.
+     * Checks creation of new entity instance.
+     */
+    public function testCreate()
+    {
+        $ticket = $this->repository->create();
+        $this->assertInstanceOf($this->classMetadata->getName(), $ticket);
+    }
+
+    /**
+     * Checks persisting new entity instance.
+     */
+    public function testSave()
+    {
+        $createdTicket = $this->repository->create();
+        $createdTicket->setTitle('repository');
+        $this->repository->save($createdTicket);
+
+        $retrievedTicket = $this->repository->getByTitle('repository');
+
+        $this->assertEquals($createdTicket->getId(), $retrievedTicket->getId());
+    }
+
+    /**
+     * Checks purging entity from data store.
+     *
+     * @depends testSave
+     */
+    public function testDelete()
+    {
+        $ticket = $this->repository->getByTitle('repository');
+        $this->repository->delete($ticket);
+
+        $this->assertNull($this->repository->getByTitle('repository'));
+    }
+
+    /**
+     * Checks retrieval of entity by it's id.
      */
     public function testGetById()
     {
@@ -34,12 +82,32 @@ class TicketRepositoryTest extends KernelTestCase
     }
 
     /**
-     * Checks entity retrieval by it's id.
+     * Checks retrieval of nonexistent entity by it's id.
+     *
+     * @depends testDelete
      */
-    public function testGetByIdReturnNull()
+    public function testGetNonExistentById()
     {
         $ticket = $this->repository->getById(6);
-        $this->assertEquals(null, $ticket);
+        $this->assertNull($ticket);
+    }
+
+    /**
+     * Checks retrieval of entity by it's title.
+     */
+    public function testGetByTitle()
+    {
+        $ticket = $this->repository->getByTitle('ticket1');
+        $this->assertEquals('ticket1', $ticket->getTitle());
+    }
+
+    /**
+     * Checks retrieval of nonexistent entity by it's title.
+     */
+    public function testGetNonExistentByTitle()
+    {
+        $ticket = $this->repository->getByTitle('ticket6');
+        $this->assertNull($ticket);
     }
 
     /**
@@ -47,22 +115,50 @@ class TicketRepositoryTest extends KernelTestCase
      */
     public function testCommitTransaction()
     {
-        $entityManagerMock = $this->getMockBuilder('Doctrine\ORM\EntityManager')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $ticket1 = $this->repository->create();
+        $ticket2 = $this->repository->create();
 
-        $entityManagerMock
-            ->expects($this->once())
-            ->method('flush')
-            ->withAnyParameters();
+        $ticket1->setTitle('transaction1');
+        $ticket2->setTitle('transaction2');
 
-        $entityMetadataMock = $this->getMockBuilder('Doctrine\ORM\Mapping\ClassMetadata')
-            ->disableOriginalConstructor()
-            ->getMock();
+        $this->repository->save($ticket1, false);
+        $this->repository->save($ticket2, false);
 
-        /** @var EntityManager $entityManagerMock */
-        /** @var ClassMetadata $entityMetadataMock */
-        $repository = new TicketRepository($entityManagerMock, $entityMetadataMock);
-        $repository->commitTransaction();
+        $this->assertEmpty(
+            array_filter(
+                [
+                    $this->repository->getByTitle('transaction1'),
+                    $this->repository->getByTitle('transaction2')
+                ]
+            )
+        );
+
+        $this->repository->commitTransaction();
+
+        $retrievedTicket1 = $this->repository->getByTitle('transaction1');
+        $retrievedTicket2 = $this->repository->getByTitle('transaction2');
+
+        $this->assertEquals('transaction1', $retrievedTicket1->getTitle());
+        $this->assertEquals('transaction2', $retrievedTicket2->getTitle());
+
+        $this->repository->delete($retrievedTicket1, false);
+        $this->repository->delete($retrievedTicket2, false);
+
+        $deletedTicket1 = $this->repository->getByTitle('transaction1');
+        $deletedTicket2 = $this->repository->getByTitle('transaction2');
+
+        $this->assertEquals('transaction1', $deletedTicket1->getTitle());
+        $this->assertEquals('transaction2', $deletedTicket2->getTitle());
+
+        $this->repository->commitTransaction();
+
+        $this->assertEmpty(
+            array_filter(
+                [
+                    $this->repository->getByTitle('transaction1'),
+                    $this->repository->getByTitle('transaction2')
+                ]
+            )
+        );
     }
 }

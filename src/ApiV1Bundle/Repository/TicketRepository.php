@@ -34,7 +34,7 @@ class TicketRepository extends EntityRepository implements TicketRepositoryInter
     /**
      * {@inheritdoc}
      */
-    public function delete(TicketInterface $entity, $autoCommit = false)
+    public function delete(TicketInterface $entity, $autoCommit = true)
     {
         $this->getEntityManager()->remove($entity);
         if ($autoCommit) {
@@ -58,6 +58,23 @@ class TicketRepository extends EntityRepository implements TicketRepositoryInter
         $queryBuilder = $this->createQueryBuilder('Ticket');
 
         $queryBuilder->andWhere('Ticket.id = :id')->setParameter('id', $id);
+        $queryBuilder->setMaxResults(1);
+
+        try {
+            return $queryBuilder->getQuery()->getSingleResult();
+        } catch (NoResultException $exception) {
+            return null;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByTitle($title)
+    {
+        $queryBuilder = $this->createQueryBuilder('Ticket');
+
+        $queryBuilder->andWhere('Ticket.title = :title')->setParameter('title', $title);
         $queryBuilder->setMaxResults(1);
 
         try {

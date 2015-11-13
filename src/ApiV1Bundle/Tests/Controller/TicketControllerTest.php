@@ -9,19 +9,6 @@ use Liip\FunctionalTestBundle\Test\WebTestCase;
  */
 class TicketControllerTest extends WebTestCase
 {
-    /** @var \Doctrine\Common\DataFixtures\ReferenceRepository */
-    private $fixtures;
-
-    /**
-     * Prepares environment for executing tests.
-     */
-    public function setUp()
-    {
-        /** @var \Doctrine\Common\DataFixtures\Executor\AbstractExecutor $executor */
-        $executor = $this->loadFixtures(['ApiV1Bundle\DataFixtures\ORM\TicketFixture']);
-        $this->fixtures = $executor->getReferenceRepository();
-    }
-
     /**
      * Checks single resource retrieval using the GET method.
      */
@@ -29,10 +16,9 @@ class TicketControllerTest extends WebTestCase
     {
         $client = static::createClient();
 
-        $id = $this->fixtures->getReference('ticket1')->getId();
-        $route = $this->getUrl('apiv1_get_ticket', ['id' => $id]);
-
+        $route = $this->getUrl('apiv1_get_ticket', ['id' => 1]);
         $client->request('GET', $route, [], [], ['HTTP_ACCEPT' => 'application/json']);
+
         $response = $client->getResponse();
         $data = json_decode($response->getContent(), true);
 

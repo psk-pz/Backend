@@ -12,7 +12,7 @@ interface TicketRepositoryInterface
 {
     /**
      * Creates new instance of entity.
-     * Lowers coupling between repository and entity.
+     * Loosens coupling between repository and entity.
      *
      * @return TicketInterface
      */
@@ -48,4 +48,12 @@ interface TicketRepositoryInterface
      * @return TicketInterface | null
      */
     public function getById($id);
+
+    /**
+     * Retrieves entity by it's title.
+     *
+     * @param string $title
+     * @return TicketInterface | null
+     */
+    public function getByTitle($title);
 }

@@ -36,4 +36,12 @@ interface TicketResourceInterface
      * @return TicketInterface | null
      */
     public function getById($id);
+
+    /**
+     * Retrieves resource by it's title.
+     *
+     * @param string $title
+     * @return TicketInterface | null
+     */
+    public function getByTitle($title);
 }

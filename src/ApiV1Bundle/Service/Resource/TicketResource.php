@@ -55,4 +55,12 @@ class TicketResource implements TicketResourceInterface
     {
         return $this->repository->getById($id);
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getByTitle($title)
+    {
+        return $this->repository->getByTitle($title);
+    }
 }
