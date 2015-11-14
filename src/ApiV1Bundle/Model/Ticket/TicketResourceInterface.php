@@ -11,9 +11,11 @@ interface TicketResourceInterface
     /**
      * Creates new resource.
      *
+     * @param array $parameters
+     *
      * @return TicketInterface
      */
-    public function create();
+    public function create(array $parameters);
 
     /**
      * Persists resource into data store.

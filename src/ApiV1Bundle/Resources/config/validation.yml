@@ -1,0 +1,14 @@
+ApiV1Bundle\Entity\Ticket:
+    properties:
+        title:
+            - NotBlank: ~
+            - NotNull: ~
+            - Length:
+                min: 2
+                max: 50
+        content:
+            - NotBlank: ~
+            - NotNull: ~
+            - Length:
+                min: 2
+                max: 1000

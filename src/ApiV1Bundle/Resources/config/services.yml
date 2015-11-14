@@ -12,4 +12,4 @@ services:
 
     apiv1.resource.ticket:
         class: %apiv1.resource.ticket.class%
-        arguments: [@apiv1.repository.ticket]
+        arguments: [@apiv1.repository.ticket, @form.factory]
