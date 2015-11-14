@@ -43,4 +43,13 @@ class TicketTest extends PHPUnit_Framework_TestCase
         $this->ticket->setTitle('ticket1');
         $this->assertEquals('ticket1', $this->ticket->getTitle());
     }
+
+    /**
+     * Checks setter and getter for content field.
+     */
+    public function testContent()
+    {
+        $this->ticket->setContent('ticket1');
+        $this->assertEquals('ticket1', $this->ticket->getContent());
+    }
 }

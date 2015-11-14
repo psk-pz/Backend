@@ -16,7 +16,7 @@ class AppKernel extends Kernel
     private $logDir = null;
 
     /**
-     * Returns all bundles, that must be enabled.
+     * Returns all bundles, which must be enabled.
      *
      * @return Bundle[]
      */

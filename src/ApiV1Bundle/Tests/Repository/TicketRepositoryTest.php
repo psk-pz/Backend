@@ -52,6 +52,7 @@ class TicketRepositoryTest extends KernelTestCase
     {
         $createdTicket = $this->repository->create();
         $createdTicket->setTitle('repository');
+        $createdTicket->setContent('repository');
         $this->repository->save($createdTicket);
 
         $retrievedTicket = $this->repository->getByTitle('repository');
@@ -119,7 +120,9 @@ class TicketRepositoryTest extends KernelTestCase
         $ticket2 = $this->repository->create();
 
         $ticket1->setTitle('transaction1');
+        $ticket1->setContent('transaction1');
         $ticket2->setTitle('transaction2');
+        $ticket2->setContent('transaction2');
 
         $this->repository->save($ticket1, false);
         $this->repository->save($ticket2, false);

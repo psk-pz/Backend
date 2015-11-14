@@ -46,6 +46,7 @@ class TicketResourceTest extends KernelTestCase
     {
         $createdTicket = $this->resource->create();
         $createdTicket->setTitle('repository');
+        $createdTicket->setContent('repository');
         $this->resource->save($createdTicket);
 
         $retrievedTicket = $this->resource->getByTitle('repository');
