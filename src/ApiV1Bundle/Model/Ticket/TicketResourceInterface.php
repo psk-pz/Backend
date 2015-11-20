@@ -2,6 +2,8 @@
 
 namespace ApiV1Bundle\Model\Ticket;
 
+use ApiV1Bundle\Exception\InvalidResourceException;
+
 /**
  * Interface for resource.
  * Adheres to indirection principle and makes controller more thin.
@@ -12,8 +14,9 @@ interface TicketResourceInterface
      * Creates new resource.
      *
      * @param array $parameters
-     *
      * @return TicketInterface
+     *
+     * @throws InvalidResourceException
      */
     public function create(array $parameters);
 

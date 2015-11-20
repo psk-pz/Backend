@@ -2,12 +2,11 @@
 
 namespace ApiV1Bundle\Service\Resource;
 
-use ApiV1Bundle\Exception\InvalidFormException;
-use ApiV1Bundle\Form\TicketType;
 use ApiV1Bundle\Model\Ticket\TicketInterface;
 use ApiV1Bundle\Model\Ticket\TicketRepositoryInterface;
 use ApiV1Bundle\Model\Ticket\TicketResourceInterface;
-use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use ApiV1Bundle\Exception\InvalidResourceException;
 
 /**
  * Service encapsulating additional business logic related with resource.
@@ -17,19 +16,19 @@ class TicketResource implements TicketResourceInterface
     /** @var TicketResourceInterface */
     protected $repository;
 
-    /** @var FormFactoryInterface */
-    private $formFactory;
+    /** @var ValidatorInterface */
+    private $validator;
 
     /**
      * Injects dependencies.
      *
      * @param TicketRepositoryInterface $repository
-     * @param FormFactoryInterface $formFactory
+     * @param ValidatorInterface $validator
      */
-    public function __construct(TicketRepositoryInterface $repository, FormFactoryInterface $formFactory)
+    public function __construct(TicketRepositoryInterface $repository, ValidatorInterface $validator)
     {
         $this->repository = $repository;
-        $this->formFactory = $formFactory;
+        $this->validator = $validator;
     }
 
     /**
@@ -39,31 +38,17 @@ class TicketResource implements TicketResourceInterface
     {
         $ticket = $this->repository->create();
 
-        return $this->processForm($ticket, $parameters, 'POST');
-    }
+        $ticket->setTitle($parameters['title']);
+        //$ticket->setContent($parameters['content']);
 
-    /**
-     * Processes the form.
-     *
-     * @param TicketInterface $ticket
-     * @param array $parameters
-     * @param String $method
-     * @return TicketInterface
-     *
-     * @throws InvalidFormException
-     */
-    private function processForm(TicketInterface $ticket, array $parameters, $method = 'PUT')
-    {
-        $form = $this->formFactory->create(new TicketType(), $ticket, ['method' => $method]);
-        $form->submit($parameters, 'PATCH' !== $method);
-        if ($form->isValid()) {
-            $ticket = $form->getData();
-            $this->repository->save($ticket);
-
-            return $ticket;
+        $errors = $this->validator->validate($ticket);
+        if (count($errors) > 0) {
+            throw new InvalidResourceException($errors);
         }
 
-        throw new InvalidFormException('Invalid submitted data', $form);
+        $this->repository->save($ticket);
+
+        return $ticket;
     }
 
     /**

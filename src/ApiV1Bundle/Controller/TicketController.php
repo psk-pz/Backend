@@ -2,13 +2,14 @@
 
 namespace ApiV1Bundle\Controller;
 
-use ApiV1Bundle\Exception\InvalidFormException;
-use ApiV1Bundle\Model\Ticket\TicketInterface;
 use FOS\RestBundle\Controller\FOSRestController;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Symfony\Component\Form\FormTypeInterface;
+use ApiV1Bundle\Model\Ticket\TicketInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\View\View;
+use Symfony\Component\Form\FormInterface;
+use ApiV1Bundle\Exception\InvalidResourceException;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 /**
  * Controller used to handle requests sent to application.
@@ -20,25 +21,18 @@ class TicketController extends FOSRestController
      *
      * @ApiDoc()
      *
-     * @param Request $request the request object
-     *
-     * @return FormTypeInterface
+     * @param Request $request
+     * @return View | FormInterface
      */
     public function postTicketAction(Request $request)
     {
         try {
-            $ticket = $this->container->get('apiv1.resource.ticket')->create(
-                $request->request->all()
-            );
+            $ticketResource = $this->container->get('apiv1.resource.ticket');
+            $ticket = $ticketResource->create($request->request->all());
 
-            $routeOptions = [
-                'id' => $ticket->getId(),
-                '_format' => $request->get('_format')
-            ];
-
-            return $this->routeRedirectView('apiv1_get_ticket', $routeOptions, Response::HTTP_CREATED);
-        } catch (InvalidFormException $exception) {
-            return $exception->getForm();
+            return $this->routeRedirectView('apiv1_get_ticket', ['id' => $ticket->getId()], Response::HTTP_CREATED);
+        } catch (InvalidResourceException $exception) {
+            return $exception->getViolationList();
         }
     }
 
