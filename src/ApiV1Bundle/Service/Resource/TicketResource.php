@@ -38,8 +38,8 @@ class TicketResource implements TicketResourceInterface
     {
         $ticket = $this->repository->create();
 
-        $ticket->setTitle($parameters['title']);
-        //$ticket->setContent($parameters['content']);
+        !isset($parameters['title']) ?: $ticket->setTitle($parameters['title']);
+        !isset($parameters['content']) ?: $ticket->setContent($parameters['content']);
 
         $errors = $this->validator->validate($ticket);
         if (count($errors) > 0) {
